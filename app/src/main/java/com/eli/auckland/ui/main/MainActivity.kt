@@ -24,5 +24,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
+        viewModel.getRubbishInfo()
     }
 }
