@@ -2,6 +2,7 @@ package com.eli.auckland.data
 
 import androidx.lifecycle.MutableLiveData
 import com.eli.auckland.api.RubbishApi
+import com.eli.auckland.api.RubbishApiTest
 import com.eli.auckland.model.Rubbish
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,10 +18,10 @@ class RubbishRepository {
 
     fun getRubbish(an: String?) {
         ioScope.launch {
-            val result = RubbishApi.api.getRubbish(an)?.await()
+//            val result = RubbishApi.api.getRubbish(an)?.await()
+            val result = RubbishApiTest.api.getRubbish()?.await()
             if (result != null) {
-//                rubbish.postValue(result)
-                Timber.i(result.toString())
+                rubbish.postValue(result)
             }
         }
     }

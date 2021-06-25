@@ -1,5 +1,6 @@
 package com.eli.auckland.api
 
+import com.eli.auckland.model.Rubbish
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Call
@@ -18,8 +19,8 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface RubbishServiceTest {
-    @GET("/rubbish.json")
-    fun getRubbish(@Query("an") an: String?) : Call<Any?>?
+    @GET("rubbish.json")
+    fun getRubbish() : Call<Rubbish?>?
 }
 
 object RubbishApiTest {
