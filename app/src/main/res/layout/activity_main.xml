@@ -9,14 +9,29 @@
             type="com.eli.auckland.ui.main.MainViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.main.MainActivity">
+        tools:context=".ui.main.MainActivity"
+        android:orientation="vertical">
+<!--        Danh sach dia chi-->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_address_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/sp_normal"
+            android:background="?attr/selectableItemBackground"
+            android:drawableEnd="@drawable/ic_arrow_drop_down"
+            android:text="@{viewModel.currentAddress.name}"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:hint="@string/choose_an_address" />
+<!--        Noi dung dia chi hien tai-->
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.rubbish.cRecycling}"
+            android:text="@{viewModel.rubbish.toString()}"
+            android:layout_marginHorizontal="@dimen/sp_normal"
             tools:text="helloworld"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

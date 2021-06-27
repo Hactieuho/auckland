@@ -1,5 +1,6 @@
 package com.eli.auckland.api
 
+import com.eli.auckland.model.AddressResult
 import com.eli.auckland.model.Rubbish
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -14,15 +15,15 @@ private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
 private val retrofit = Retrofit.Builder()
-    .addConverterFactory(MoshiConverterFactory.create(moshi))
     .baseUrl(BASE_URL)
+    .addConverterFactory(MoshiConverterFactory.create(moshi))
     .build()
 
 interface RubbishService {
+    @GET("locations")
+    fun getLocations() : Call<AddressResult?>?
     @GET("rubbish")
-    fun getRubbish(@Query("an") an: String?) : Call<Any?>?
-    @GET("rubbish")
-    fun getRubbish2(@Query("an") an: String?) : Call<Rubbish?>?
+    fun getRubbish(@Query("an") an: String?) : Call<Rubbish?>?
 }
 
 object RubbishApi {

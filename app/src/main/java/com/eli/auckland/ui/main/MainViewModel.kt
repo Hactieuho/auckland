@@ -1,15 +1,23 @@
 package com.eli.auckland.ui.main
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.eli.auckland.api.RubbishService
 import com.eli.auckland.data.RubbishRepository
 
 class MainViewModel : ViewModel() {
-    val id = MutableLiveData("12342681539")
+    // Dia chi hien tai
+    val currentAddress = RubbishRepository.instant.currentAddress
+    // Danh sach dia chi
+    val addressList = RubbishRepository.instant.addressList
+    // Thong tin dia chi hien tai
     val rubbish = RubbishRepository.instant.rubbish
 
+    // Lah danh sach dia chi
+    fun getLocations() {
+        RubbishRepository.instant.getLocations()
+    }
+
+    // Lay thong tin dia chi hien tai
     fun getRubbishInfo() {
-        RubbishRepository.instant.getRubbish(id.value)
+        RubbishRepository.instant.getRubbish(currentAddress.value?.id)
     }
 }

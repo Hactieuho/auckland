@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="sp_tiny">2dp</dimen>
+    <dimen name="sp_small">4dp</dimen>
+    <dimen name="sp_normal">8dp</dimen>
+    <dimen name="sp_large">12dp</dimen>
+    <dimen name="sp_big">16dp</dimen>
+    <dimen name="sp_huge">20dp</dimen>
+</resources>
