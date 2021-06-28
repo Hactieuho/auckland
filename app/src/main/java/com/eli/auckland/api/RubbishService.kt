@@ -1,5 +1,6 @@
 package com.eli.auckland.api
 
+import com.eli.auckland.api.NullOnEmptyConverterFactory
 import com.eli.auckland.model.AddressResult
 import com.eli.auckland.model.Rubbish
 import com.squareup.moshi.Moshi
@@ -17,6 +18,7 @@ private val moshi = Moshi.Builder()
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(MoshiConverterFactory.create(moshi))
+    .addConverterFactory(NullOnEmptyConverterFactory())
     .build()
 
 interface RubbishService {
