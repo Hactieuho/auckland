@@ -1,4 +1,4 @@
-package com.eli.auckland.constant
+package com.eli.auckland.util
 
 import android.content.SharedPreferences
 import androidx.core.content.edit

@@ -1,4 +1,4 @@
-package com.eli.auckland.constant
+package com.eli.auckland.util
 
 class KEY {
     companion object {

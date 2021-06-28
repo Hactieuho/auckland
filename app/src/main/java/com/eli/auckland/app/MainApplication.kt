@@ -2,9 +2,9 @@ package com.eli.auckland.app
 
 import android.app.Application
 import com.eli.auckland.BuildConfig
-import com.eli.auckland.constant.getItem
-import com.eli.auckland.constant.getList
-import com.eli.auckland.constant.saveItem
+import com.eli.auckland.util.getItem
+import com.eli.auckland.util.getList
+import com.eli.auckland.util.saveItem
 import com.eli.auckland.model.Address
 import timber.log.Timber
 

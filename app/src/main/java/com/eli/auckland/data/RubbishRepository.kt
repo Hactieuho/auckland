@@ -3,11 +3,10 @@ package com.eli.auckland.data
 import androidx.lifecycle.MutableLiveData
 import com.eli.auckland.api.RubbishApi
 import com.eli.auckland.app.MainApplication
-import com.eli.auckland.constant.KEY
+import com.eli.auckland.util.KEY
 import com.eli.auckland.model.Address
 import com.eli.auckland.model.ApiResult
 import com.eli.auckland.model.Rubbish
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
