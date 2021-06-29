@@ -8,7 +8,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.eli.auckland.R
 import com.eli.auckland.data.RubbishRepository
 import com.eli.auckland.databinding.ActivityMainBinding
-import com.eli.auckland.model.ApiResult
+import com.eli.auckland.resource.Resource
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MainActivity : AppCompatActivity() {
@@ -26,8 +26,8 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         RubbishRepository.instant.getAddressListResult.observe(this) {
-            if (it == ApiResult.ERROR) {
-                ToastUtils.showShort(it.value)
+            if (it is Resource.Error) {
+                ToastUtils.showShort(it.message)
                 RubbishRepository.instant.getAddressListResult.postValue(null)
             }
         }
@@ -37,8 +37,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
         RubbishRepository.instant.getRubbishResult.observe(this) {
-            if (it != null) {
-                ToastUtils.showLong(it.value)
+            if (it is Resource.Error) {
+                ToastUtils.showLong(it.message)
                 RubbishRepository.instant.getRubbishResult.postValue(null)
             }
         }

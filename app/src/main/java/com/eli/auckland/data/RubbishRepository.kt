@@ -5,8 +5,8 @@ import com.eli.auckland.api.RubbishApi
 import com.eli.auckland.app.MainApplication
 import com.eli.auckland.util.KEY
 import com.eli.auckland.model.Address
-import com.eli.auckland.model.ApiResult
 import com.eli.auckland.model.Rubbish
+import com.eli.auckland.resource.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -18,12 +18,14 @@ class RubbishRepository {
 
     // Danh sach dia chi
     val addressList = MutableLiveData<List<Address>>(null)
-    val getAddressListResult = MutableLiveData<ApiResult?>(null)
     // Dia chi hien tai
     val currentAddress = MutableLiveData<Address?>(null)
+    // Lay danh sach dia chi
+    val getAddressListResult = MutableLiveData<Resource<List<Address>?>>()
     // Thong tin dia chi hien tai
     val rubbish = MutableLiveData<Rubbish>(null)
-    val getRubbishResult = MutableLiveData<ApiResult?>(null)
+    // Lay thong tin dia chi hien tai
+    val getRubbishResult = MutableLiveData<Resource<Rubbish>>()
     val job = Job()
     val ioScope = CoroutineScope(Dispatchers.IO + job)
 
@@ -42,21 +44,20 @@ class RubbishRepository {
 
     // Lay danh sach dia chi
     fun getLocations() {
+        getAddressListResult.postValue(Resource.Loading("Getting address list"))
         ioScope.launch {
             try {
-                getAddressListResult.postValue(ApiResult.LOADING)
                 val result = RubbishApi.api.getLocations()?.await()
                 if (result?.isSuccessful() == true) {
-                    addressList.postValue(result.address)
                     // Luu lai danh sach dia chi
+                    addressList.postValue(result.address)
+                    getAddressListResult.postValue(Resource.Success(result.address))
                     MainApplication.instant.saveToSharePre(KEY.ADDRESS_LIST, result.address)
-                    getAddressListResult.postValue(ApiResult.SUCCESS)
                 } else {
-                    getAddressListResult.postValue(ApiResult.ERROR)
+                    getAddressListResult.postValue(Resource.Error("Address list not found", addressList.value))
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                getAddressListResult.postValue(ApiResult.ERROR)
             }
         }
     }
@@ -64,17 +65,16 @@ class RubbishRepository {
     fun getRubbish(an: String?) {
         ioScope.launch {
             try {
-                getRubbishResult.postValue(ApiResult.LOADING)
                 val result = RubbishApi.api.getRubbish(an)?.await()
                 if (result != null) {
-                    rubbish.postValue(result)
                     // Luu lai address hien tai
+                    getRubbishResult.postValue(Resource.Success(result))
+                    rubbish.postValue(result)
                     MainApplication.instant.saveToSharePre(KEY.CURRENT_ADDRESS, currentAddress.value)
-                    getRubbishResult.postValue(ApiResult.SUCCESS)
                 }
             } catch (e: Exception) {
+                getRubbishResult.postValue(Resource.Error("Get rubbish info error: ${e.message}"))
                 e.printStackTrace()
-                getRubbishResult.postValue(ApiResult.ERROR)
             }
         }
     }
