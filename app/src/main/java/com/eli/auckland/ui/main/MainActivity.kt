@@ -25,21 +25,18 @@ class MainActivity : AppCompatActivity() {
     private fun observeViewModel() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-        RubbishRepository.instant.getAddressListResult.observe(this) {
+        viewModel.currentTownCity.observe(this) {
+            // Lay danh sach road name khi chon 1 town city
+            viewModel.getRoadNames(it)
+        }
+        RubbishRepository.instant.getTownCitiesResult.observe(this) {
             if (it is Resource.Error) {
                 ToastUtils.showShort(it.message)
-                RubbishRepository.instant.getAddressListResult.postValue(null)
             }
         }
-        RubbishRepository.instant.currentAddress.observe(this) {
-            if (it != null) {
-                viewModel.getRubbishInfo()
-            }
-        }
-        RubbishRepository.instant.getRubbishResult.observe(this) {
+        RubbishRepository.instant.getRoadNamesResult.observe(this) {
             if (it is Resource.Error) {
-                ToastUtils.showLong(it.message)
-                RubbishRepository.instant.getRubbishResult.postValue(null)
+                ToastUtils.showShort(it.message)
             }
         }
     }
@@ -48,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         // Lay danh sach town city
         viewModel.getTownCities()
         binding.tvTownCityList.setOnClickListener { showTownCities() }
-        binding.tvAddressList.setOnClickListener { showLocations() }
+        binding.tvRoadName.setOnClickListener { showRoadNames() }
     }
 
     fun showTownCities() {
@@ -63,25 +60,26 @@ class MainActivity : AppCompatActivity() {
             .setTitle(resources.getString(R.string.choose_an_town_city))
             .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which -> }
             .setSingleChoiceItems(townCityList, checkedTownCity) { dialog, which ->
-                RubbishRepository.instant.currentTownCity.postValue(RubbishRepository.instant.getTownCitiesResult.value?.data?.get(which))
+                // Danh dau town city hien tai
+                viewModel.currentTownCity.postValue(RubbishRepository.instant.getTownCitiesResult.value?.data?.get(which))
                 dialog.dismiss()
             }
             .show()
     }
 
-    fun showLocations() {
-        val addressList = viewModel.addressList.value?.map { address -> address.name }?.toTypedArray()
-        val checkedAddress = viewModel.currentAddress.value?.let {
-            viewModel.addressList.value?.indexOf(
+    fun showRoadNames() {
+        val roadNameList = RubbishRepository.instant.getRoadNamesResult.value?.data?.toTypedArray()
+        val checkedRoadName = viewModel.currentRoadName.value?.let {
+            RubbishRepository.instant.getRoadNamesResult.value?.data?.indexOf(
                 it
             )
         } ?: 0
 
         MaterialAlertDialogBuilder(this)
-            .setTitle(resources.getString(R.string.choose_an_address))
+            .setTitle(resources.getString(R.string.choose_road_name))
             .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which -> }
-            .setSingleChoiceItems(addressList, checkedAddress) { dialog, which ->
-                viewModel.currentAddress.postValue(viewModel.addressList.value?.get(which))
+            .setSingleChoiceItems(roadNameList, checkedRoadName) { dialog, which ->
+                viewModel.currentRoadName.postValue(RubbishRepository.instant.getRoadNamesResult.value?.data?.get(which))
                 dialog.dismiss()
             }
             .show()

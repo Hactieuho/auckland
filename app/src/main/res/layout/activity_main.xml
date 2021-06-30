@@ -26,23 +26,22 @@
             android:gravity="center_vertical"
             android:includeFontPadding="false"
             android:hint="@string/choose_an_town_city" />
-<!--        Danh sach dia chi-->
+<!--        Danh sach duong-->
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_address_list"
+            android:id="@+id/tv_road_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/sp_normal"
             android:background="?attr/selectableItemBackground"
             android:drawableEnd="@drawable/ic_arrow_drop_down"
-            android:text="@{viewModel.currentAddress.name}"
+            android:text="@{viewModel.currentRoadName}"
             android:gravity="center_vertical"
             android:includeFontPadding="false"
-            android:hint="@string/choose_an_address" />
+            android:hint="@string/choose_road_name" />
 <!--        Noi dung dia chi hien tai-->
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.rubbish.toString()}"
             android:layout_marginHorizontal="@dimen/sp_normal"
             tools:text="helloworld"/>
     </androidx.appcompat.widget.LinearLayoutCompat>

@@ -20,16 +20,13 @@ class RubbishRepository {
     val getTownCitiesResult = MutableLiveData<Resource<List<String?>?>>()
     // Town city hien tai
     val currentTownCity = MutableLiveData<String?>(null)
-    // Danh sach dia chi
-    val addressList = MutableLiveData<List<Address>>(null)
-    // Dia chi hien tai
-    val currentAddress = MutableLiveData<Address?>(null)
-    // Lay danh sach dia chi
-    val getAddressListResult = MutableLiveData<Resource<List<Address>?>>()
-    // Thong tin dia chi hien tai
-    val rubbish = MutableLiveData<Rubbish>(null)
-    // Lay thong tin dia chi hien tai
-    val getRubbishResult = MutableLiveData<Resource<Rubbish>>()
+
+    // Lay danh sach road name
+    val getRoadNamesResult = MutableLiveData<Resource<List<String?>?>>()
+    // Road name hien tai
+    val currentRoadName = MutableLiveData<String?>(null)
+
+
     val job = Job()
     val ioScope = CoroutineScope(Dispatchers.IO + job)
 
@@ -37,12 +34,10 @@ class RubbishRepository {
         // Lay danh sach dia chi da luu
         val addresses = MainApplication.instant.getListFromSharedPre(KEY.ADDRESS_LIST)
         if (addresses != null) {
-            addressList.postValue(addresses)
         }
         // Lay address da luu
         val address = MainApplication.instant.getFromSharedPre<Address>(KEY.CURRENT_ADDRESS)
         if (address != null) {
-            currentAddress.postValue(address)
         }
     }
 
@@ -65,19 +60,21 @@ class RubbishRepository {
         }
     }
 
-    fun getRubbish(an: String?) {
+    // Lay danh sach road name
+    fun getRoadNames(locality: String?) {
+        getRoadNamesResult.postValue(Resource.Loading("Getting road name list", getRoadNamesResult.value?.data))
         ioScope.launch {
             try {
-                val result = RubbishApi.api.getRubbish(an)?.await()
-                if (result != null) {
-                    // Luu lai address hien tai
-                    getRubbishResult.postValue(Resource.Success(result))
-                    rubbish.postValue(result)
-                    MainApplication.instant.saveToSharePre(KEY.CURRENT_ADDRESS, currentAddress.value)
+                val result = RubbishApi.api.getRoadName(locality)?.await()
+                if (!result.isNullOrEmpty()) {
+                    // Luu lai danh sach road name
+                    getRoadNamesResult.postValue(Resource.Success(result.filter { s -> !s.isNullOrEmpty() }))
+                } else {
+                    getRoadNamesResult.postValue(Resource.Error("Road names not found", getRoadNamesResult.value?.data))
                 }
             } catch (e: Exception) {
-                getRubbishResult.postValue(Resource.Error("Get rubbish info error: ${e.message}"))
                 e.printStackTrace()
+                getRoadNamesResult.postValue(Resource.Error("Getting road names error: ${e.message}", getRoadNamesResult.value?.data))
             }
         }
     }
