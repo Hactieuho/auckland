@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         viewModel.currentTownCity.observe(this) {
             // Reset road name
+            RubbishRepository.instant.getRoadNamesResult.postValue(Resource.Success(null))
             viewModel.currentRoadName.postValue(null)
             // Lay danh sach road name khi chon 1 town city
             if (!it.isNullOrEmpty()) {
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         }
         viewModel.currentRoadName.observe(this) {
             // Reset address number
+            RubbishRepository.instant.getAddressNumbersResult.postValue(Resource.Success(null))
             viewModel.currentAddressNumber.postValue(null)
             // Lay danh sach address number khi chon 1 road name
             if (!it.isNullOrEmpty()) {
@@ -50,6 +52,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
         viewModel.currentAddressNumber.observe(this) {
+            // Reset address number
+            viewModel.getRubbishInfoResult.postValue(Resource.Success(null))
             // Lay thong tin rubbish khi chon 1 address number
             if (!it.isNullOrEmpty()) {
                 viewModel.getRubbishInfo()
