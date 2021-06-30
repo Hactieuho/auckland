@@ -1,15 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryVariant">@color/primaryDarkColor</item>
-        <item name="colorOnPrimary">@color/primaryTextColor</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/secondaryColor</item>
-        <item name="colorSecondaryVariant">@color/secondaryDarkColor</item>
-        <item name="colorOnSecondary">@color/secondaryTextColor</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+<resources>
+
+    <style name="material_edt">
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@drawable/material_edt_text_color</item>
+        <item name="android:textColorHint">@color/colorTextDescription</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:paddingTop">@dimen/sp_big</item>
+        <item name="android:paddingBottom">@dimen/sp_small</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="material_edt.no_title">
+        <item name="android:paddingTop">@dimen/sp_small</item>
+    </style>
+
+    <style name="material_edt.disabled">
+        <item name="android:editable">false</item>
+        <item name="android:focusable">false</item>
+    </style>
+
+    <style name="material_edt.disabled.select">
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+
+    <style name="material_edt.number">
+        <item name="android:inputType">number</item>
+    </style>
+
+    <style name="default_text_input_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="boxBackgroundColor">@android:color/white</item>
+        <item name="expandedHintEnabled">false</item>
+        <item name="android:textColorHint">@drawable/material_text_color_hint</item>
+        <item name="boxStrokeColor">@drawable/material_box_stroke_color</item>
+        <item name="boxCollapsedPaddingTop">@dimen/sp_tiny</item>
+    </style>
+
+    <style name="default_text_input_layout.no_hint">
+        <item name="hintEnabled">false</item>
+    </style>
+
+    <style name="default_text_input_layout.select">
+        <item name="endIconMode">custom</item>
+        <item name="endIconTint">@color/colorTextDescription</item>
+        <item name="endIconDrawable">@drawable/ic_arrow_drop_down</item>
+    </style>
+
+    <style name="default_text_input_layout.select.no_hint">
+        <item name="hintEnabled">false</item>
+        <item name="android:layout_height">@dimen/main_button_height</item>
+    </style>
+
+    <style name="default_text_input_layout.select.dropdown">
+        <item name="endIconDrawable">@drawable/ic_arrow_drop_down</item>
     </style>
 </resources>

@@ -9,4 +9,8 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#ffffff</color>
     <color name="colorOnSurface">#424242</color>
+    <color name="colorTextDescription">#9EA5BD</color>
+    <color name="color848BA3">#848BA3</color>
+    <color name="colorTextDefault">#4A5677</color>
+    <color name="main_divider_color">#EBEBEB</color>
 </resources>

@@ -5,7 +5,6 @@ import com.eli.auckland.api.RubbishApi
 import com.eli.auckland.app.MainApplication
 import com.eli.auckland.util.KEY
 import com.eli.auckland.model.Address
-import com.eli.auckland.model.Rubbish
 import com.eli.auckland.resource.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +24,11 @@ class RubbishRepository {
     val getRoadNamesResult = MutableLiveData<Resource<List<String?>?>>()
     // Road name hien tai
     val currentRoadName = MutableLiveData<String?>(null)
+
+    // Lay danh sach so nha
+    val getAddressNumbersResult = MutableLiveData<Resource<List<String?>?>>()
+    // So nha hien tai
+    val currentAddressNumber = MutableLiveData<String?>(null)
 
 
     val job = Job()
@@ -51,7 +55,7 @@ class RubbishRepository {
                     // Luu lai danh sach town city
                     getTownCitiesResult.postValue(Resource.Success(result.filter { s -> !s.isNullOrEmpty() && !s.contentEquals("town_city") }))
                 } else {
-                    getTownCitiesResult.postValue(Resource.Error("Town cities not found", getTownCitiesResult.value?.data))
+                    getTownCitiesResult.postValue(Resource.Error("No town city founds!", getTownCitiesResult.value?.data))
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -65,16 +69,35 @@ class RubbishRepository {
         getRoadNamesResult.postValue(Resource.Loading("Getting road name list", getRoadNamesResult.value?.data))
         ioScope.launch {
             try {
-                val result = RubbishApi.api.getRoadName(locality)?.await()
+                val result = RubbishApi.api.getRoadNames(locality)?.await()
                 if (!result.isNullOrEmpty()) {
                     // Luu lai danh sach road name
                     getRoadNamesResult.postValue(Resource.Success(result.filter { s -> !s.isNullOrEmpty() }))
                 } else {
-                    getRoadNamesResult.postValue(Resource.Error("Road names not found", getRoadNamesResult.value?.data))
+                    getRoadNamesResult.postValue(Resource.Error("No road name founds!", getRoadNamesResult.value?.data))
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
                 getRoadNamesResult.postValue(Resource.Error("Getting road names error: ${e.message}", getRoadNamesResult.value?.data))
+            }
+        }
+    }
+
+    // Lay danh sach so nha
+    fun getAddressNumbers(locality: String?, roadName: String?) {
+        getAddressNumbersResult.postValue(Resource.Loading("Getting address number list", getAddressNumbersResult.value?.data))
+        ioScope.launch {
+            try {
+                val result = RubbishApi.api.getAddressNumbers(locality, roadName)?.await()
+                if (!result.isNullOrEmpty()) {
+                    // Luu lai danh sach road name
+                    getAddressNumbersResult.postValue(Resource.Success(result.filter { s -> !s.isNullOrEmpty() }))
+                } else {
+                    getAddressNumbersResult.postValue(Resource.Error("No address number founds!", getAddressNumbersResult.value?.data))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                getAddressNumbersResult.postValue(Resource.Error("Getting address number error: ${e.message}", getAddressNumbersResult.value?.data))
             }
         }
     }

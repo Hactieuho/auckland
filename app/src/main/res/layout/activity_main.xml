@@ -15,29 +15,46 @@
         tools:context=".ui.main.MainActivity"
         android:orientation="vertical">
         <!--        Danh sach town city-->
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_town_city_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/default_text_input_layout.select"
+            android:hint="@string/choose_an_town_city"
             android:padding="@dimen/sp_normal"
-            android:background="?attr/selectableItemBackground"
-            android:drawableEnd="@drawable/ic_arrow_drop_down"
-            android:text="@{viewModel.currentTownCity}"
-            android:gravity="center_vertical"
-            android:includeFontPadding="false"
-            android:hint="@string/choose_an_town_city" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tv_town_city_list"
+                style="@style/material_edt.disabled"
+                android:text="@{viewModel.currentTownCity}"
+                tools:text="asdfa"/>
+        </com.google.android.material.textfield.TextInputLayout>
 <!--        Danh sach duong-->
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_road_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/default_text_input_layout.select"
+            android:hint="@string/choose_road_name"
             android:padding="@dimen/sp_normal"
-            android:background="?attr/selectableItemBackground"
-            android:drawableEnd="@drawable/ic_arrow_drop_down"
-            android:text="@{viewModel.currentRoadName}"
-            android:gravity="center_vertical"
-            android:includeFontPadding="false"
-            android:hint="@string/choose_road_name" />
+            android:visibility="@{viewModel.roadNameVisibility}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tv_road_name"
+                style="@style/material_edt.disabled"
+                android:text="@{viewModel.currentRoadName}"
+                tools:text="asdfa"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <!--        Danh sach so nha-->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/default_text_input_layout.select"
+            android:hint="@string/choose_address_number"
+            android:padding="@dimen/sp_normal"
+            android:visibility="@{viewModel.addressNumberVisibility}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tv_address_number"
+                style="@style/material_edt.disabled"
+                android:text="@{viewModel.currentAddressNumber}"
+                tools:text="asdfa"/>
+        </com.google.android.material.textfield.TextInputLayout>
 <!--        Noi dung dia chi hien tai-->
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"

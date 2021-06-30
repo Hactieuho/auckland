@@ -25,7 +25,9 @@ interface RubbishService {
     @GET("town_citys")
     fun getTownCities() : Call<List<String?>?>?
     @GET("full_road_names")
-    fun getRoadName(@Query("suburb_locality") locality: String?) : Call<List<String?>?>?
+    fun getRoadNames(@Query("suburb_locality") locality: String?) : Call<List<String?>?>?
+    @GET("full_address_numbers")
+    fun getAddressNumbers(@Query("suburb_locality") locality: String?, @Query("full_road_name") roadName: String?) : Call<List<String?>?>?
     @GET("locations")
     fun getLocations() : Call<AddressResult?>?
     @GET("rubbish")
