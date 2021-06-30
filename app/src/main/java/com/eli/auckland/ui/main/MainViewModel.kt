@@ -8,6 +8,8 @@ import com.eli.auckland.model.Rubbish
 import com.eli.auckland.resource.Resource
 
 class MainViewModel : ViewModel() {
+    // Town city hien tai
+    val currentTownCity = RubbishRepository.instant.currentTownCity
     // Dia chi hien tai
     val currentAddress = RubbishRepository.instant.currentAddress
     // Danh sach dia chi
@@ -15,9 +17,9 @@ class MainViewModel : ViewModel() {
     // Thong tin dia chi hien tai
     val rubbish = RubbishRepository.instant.rubbish
 
-    // Lah danh sach dia chi
-    fun getLocations() {
-        RubbishRepository.instant.getLocations()
+    // Lah danh sach town city
+    fun getTownCities() {
+        RubbishRepository.instant.getTownCities()
     }
 
     // Lay thong tin dia chi hien tai

@@ -14,6 +14,18 @@
         android:layout_height="match_parent"
         tools:context=".ui.main.MainActivity"
         android:orientation="vertical">
+        <!--        Danh sach town city-->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_town_city_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/sp_normal"
+            android:background="?attr/selectableItemBackground"
+            android:drawableEnd="@drawable/ic_arrow_drop_down"
+            android:text="@{viewModel.currentTownCity}"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:hint="@string/choose_an_town_city" />
 <!--        Danh sach dia chi-->
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_address_list"

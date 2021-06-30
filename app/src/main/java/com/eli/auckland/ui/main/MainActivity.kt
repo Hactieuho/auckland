@@ -45,9 +45,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
-        // Lay danh sach dia chi
-        viewModel.getLocations()
+        // Lay danh sach town city
+        viewModel.getTownCities()
+        binding.tvTownCityList.setOnClickListener { showTownCities() }
         binding.tvAddressList.setOnClickListener { showLocations() }
+    }
+
+    fun showTownCities() {
+        val townCityList = RubbishRepository.instant.getTownCitiesResult.value?.data?.toTypedArray()
+        val checkedTownCity = viewModel.currentTownCity.value?.let {
+            RubbishRepository.instant.getTownCitiesResult.value?.data?.indexOf(
+                it
+            )
+        } ?: 0
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(resources.getString(R.string.choose_an_town_city))
+            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which -> }
+            .setSingleChoiceItems(townCityList, checkedTownCity) { dialog, which ->
+                RubbishRepository.instant.currentTownCity.postValue(RubbishRepository.instant.getTownCitiesResult.value?.data?.get(which))
+                dialog.dismiss()
+            }
+            .show()
     }
 
     fun showLocations() {

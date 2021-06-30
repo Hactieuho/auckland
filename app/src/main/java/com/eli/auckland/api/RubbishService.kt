@@ -22,6 +22,8 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface RubbishService {
+    @GET("town_citys")
+    fun getTownCities() : Call<List<String?>?>?
     @GET("locations")
     fun getLocations() : Call<AddressResult?>?
     @GET("rubbish")

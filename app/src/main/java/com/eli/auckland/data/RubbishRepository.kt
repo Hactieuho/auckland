@@ -16,6 +16,10 @@ import java.lang.Exception
 
 class RubbishRepository {
 
+    // Lay danh sach town city
+    val getTownCitiesResult = MutableLiveData<Resource<List<String?>?>>()
+    // Town city hien tai
+    val currentTownCity = MutableLiveData<String?>(null)
     // Danh sach dia chi
     val addressList = MutableLiveData<List<Address>>(null)
     // Dia chi hien tai
@@ -42,22 +46,21 @@ class RubbishRepository {
         }
     }
 
-    // Lay danh sach dia chi
-    fun getLocations() {
-        getAddressListResult.postValue(Resource.Loading("Getting address list"))
+    // Lay danh sach town city
+    fun getTownCities() {
+        getTownCitiesResult.postValue(Resource.Loading("Getting town city list", getTownCitiesResult.value?.data))
         ioScope.launch {
             try {
-                val result = RubbishApi.api.getLocations()?.await()
-                if (result?.isSuccessful() == true) {
-                    // Luu lai danh sach dia chi
-                    addressList.postValue(result.address)
-                    getAddressListResult.postValue(Resource.Success(result.address))
-                    MainApplication.instant.saveToSharePre(KEY.ADDRESS_LIST, result.address)
+                val result = RubbishApi.api.getTownCities()?.await()
+                if (!result.isNullOrEmpty()) {
+                    // Luu lai danh sach town city
+                    getTownCitiesResult.postValue(Resource.Success(result.filter { s -> !s.isNullOrEmpty() && !s.contentEquals("town_city") }))
                 } else {
-                    getAddressListResult.postValue(Resource.Error("Address list not found", addressList.value))
+                    getTownCitiesResult.postValue(Resource.Error("Town cities not found", getTownCitiesResult.value?.data))
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                getTownCitiesResult.postValue(Resource.Error("Getting town cities error: ${e.message}", getTownCitiesResult.value?.data))
             }
         }
     }

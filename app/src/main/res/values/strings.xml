@@ -3,4 +3,5 @@
     <string name="choose_an_address">Choose An Address</string>
     <string name="cancel">Cancel</string>
     <string name="ok">Ok</string>
+    <string name="choose_an_town_city">Choose an town city</string>
 </resources>
