@@ -11,5 +11,24 @@
         <item name="colorOnSecondary">@color/secondaryTextColor</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+<!--        Text view style-->
+        <item name="android:editTextStyle">@style/InterEditTextStyle</item>
+        <item name="android:textViewStyle">@style/InterTextViewStyle</item>
+        <item name="android:buttonStyle">@style/InterButtonStyle</item>
+
+        <item name="colorSurface">@color/main_bg_color</item>
+        <item name="android:windowBackground">@color/main_bg_color</item>
+    </style>
+
+    <style name="InterEditTextStyle" parent="android:Widget.EditText">
+        <item name="android:fontFamily">@font/inter_medium</item>
+    </style>
+
+    <style name="InterTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/inter_medium</item>
+    </style>
+
+    <style name="InterButtonStyle" parent="android:Widget.Holo.Button">
+        <item name="android:fontFamily">@font/inter_medium</item>
     </style>
 </resources>

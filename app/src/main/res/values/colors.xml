@@ -13,4 +13,5 @@
     <color name="color848BA3">#848BA3</color>
     <color name="colorTextDefault">#4A5677</color>
     <color name="main_divider_color">#EBEBEB</color>
+    <color name="main_bg_color">#F8F8F9</color>
 </resources>

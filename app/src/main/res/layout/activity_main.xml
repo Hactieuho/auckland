@@ -11,9 +11,10 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".ui.main.MainActivity"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@android:color/white">
         <!--        Danh sach town city-->
         <com.google.android.material.textfield.TextInputLayout
             style="@style/default_text_input_layout.select"
@@ -55,11 +56,51 @@
                 android:text="@{viewModel.currentAddressNumber}"
                 tools:text="asdfa"/>
         </com.google.android.material.textfield.TextInputLayout>
-<!--        Noi dung dia chi hien tai-->
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.progressindicator.CircularProgressIndicator
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/sp_normal"
-            tools:text="helloworld"/>
+            android:layout_gravity="center"
+            android:visibility="@{viewModel.loadingVisibility}"
+            android:indeterminate="true" />
+<!--        Rubbish info-->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.rubbishInfoVisibility}"
+            android:padding="@dimen/sp_normal"
+            android:orientation="vertical">
+<!--            Dia chi-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_address"
+                style="@style/default_title"
+                android:text="@{viewModel.rubbishAn}"
+                tools:text="asdf sdfa, asdf"/>
+            <!--            House hold collection-->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/sp_normal"
+                    android:orientation="vertical"
+                    android:elevation="@dimen/sp_big">
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_title"
+                        android:text="@string/household_collection"/>
+                    <!--                Rubbish-->
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rubbish"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </com.google.android.material.card.MaterialCardView>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@{viewModel.getRubbishInfoResult.data.toString()}"
+                tools:text="helloworld"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

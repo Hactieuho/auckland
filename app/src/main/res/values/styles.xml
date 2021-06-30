@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="material_edt">
+    <style name="default_text">
         <item name="android:textSize">14sp</item>
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@drawable/material_edt_text_color</item>
         <item name="android:textColorHint">@color/colorTextDescription</item>
         <item name="android:singleLine">true</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
         <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="default_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/colorTextDefault</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">@font/inter_semibold</item>
+    </style>
+
+    <style name="material_edt" parent="default_text">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:paddingTop">@dimen/sp_big</item>
-        <item name="android:paddingBottom">@dimen/sp_small</item>
+        <item name="android:paddingBottom">@dimen/sp_normal</item>
         <item name="android:paddingStart">0dp</item>
         <item name="android:paddingEnd">0dp</item>
         <item name="android:background">@android:color/transparent</item>

@@ -34,13 +34,28 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         viewModel.currentTownCity.observe(this) {
+            // Reset road name
+            viewModel.currentRoadName.postValue(null)
             // Lay danh sach road name khi chon 1 town city
-            viewModel.getRoadNames()
+            if (!it.isNullOrEmpty()) {
+                viewModel.getRoadNames()
+            }
         }
         viewModel.currentRoadName.observe(this) {
+            // Reset address number
+            viewModel.currentAddressNumber.postValue(null)
             // Lay danh sach address number khi chon 1 road name
-            viewModel.getAddressNumbers()
+            if (!it.isNullOrEmpty()) {
+                viewModel.getAddressNumbers()
+            }
         }
+        viewModel.currentAddressNumber.observe(this) {
+            // Lay thong tin rubbish khi chon 1 address number
+            if (!it.isNullOrEmpty()) {
+                viewModel.getRubbishInfo()
+            }
+        }
+        viewModel.rubbishAn.observe(this, {})
         RubbishRepository.instant.getTownCitiesResult.observe(this) {
             if (it is Resource.Error) {
                 ToastUtils.showShort(it.message)

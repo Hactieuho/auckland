@@ -5,6 +5,7 @@ import com.eli.auckland.api.RubbishApi
 import com.eli.auckland.app.MainApplication
 import com.eli.auckland.util.KEY
 import com.eli.auckland.model.Address
+import com.eli.auckland.model.Rubbish
 import com.eli.auckland.resource.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +31,8 @@ class RubbishRepository {
     // So nha hien tai
     val currentAddressNumber = MutableLiveData<String?>(null)
 
+    // Lay thong tin rubbish
+    val getRubbishInfoResult = MutableLiveData<Resource<Rubbish?>>()
 
     val job = Job()
     val ioScope = CoroutineScope(Dispatchers.IO + job)
@@ -98,6 +101,25 @@ class RubbishRepository {
             } catch (e: Exception) {
                 e.printStackTrace()
                 getAddressNumbersResult.postValue(Resource.Error("Getting address number error: ${e.message}", getAddressNumbersResult.value?.data))
+            }
+        }
+    }
+
+    // Lay thong tin rubbish
+    fun getRubbish(an: String?) {
+        getRubbishInfoResult.postValue(Resource.Loading("Getting rubbish info", getRubbishInfoResult.value?.data))
+        ioScope.launch {
+            try {
+                val result = RubbishApi.api.getRubbish(an)?.await()
+                if (result != null) {
+                    // Luu lai rubbish info
+                    getRubbishInfoResult.postValue(Resource.Success(result))
+                } else {
+                    getRubbishInfoResult.postValue(Resource.Error("No rubbish info founds!", getRubbishInfoResult.value?.data))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                getRubbishInfoResult.postValue(Resource.Error("Getting rubbish info error: ${e.message}", getRubbishInfoResult.value?.data))
             }
         }
     }
