@@ -8,6 +8,6 @@ sealed class Resource<T>(
     class Success<T>(data: T) : Resource<T>(data)
     class Error<T>(message: String, data: T? = null) : Resource<T>(data, message)
     fun isLoading() = this is Loading
-    fun isSuccess() = this is Success
+    fun isSuccess() = this is Success && data != null
     fun isError() = this is Error
 }

@@ -56,11 +56,20 @@
                 android:text="@{viewModel.currentAddressNumber}"
                 tools:text="asdfa"/>
         </com.google.android.material.textfield.TextInputLayout>
+        <!--            Dia chi-->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_address"
+            style="@style/default_title"
+            android:text="@{viewModel.rubbishAn}"
+            android:visibility="@{viewModel.rubbishVisibility}"
+            android:layout_marginHorizontal="@dimen/sp_normal"
+            tools:text="asdf sdfa, asdf"/>
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="@{viewModel.loadingVisibility}"
+            android:layout_margin="@dimen/sp_normal"
             android:indeterminate="true" />
 <!--        Rubbish info-->
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -69,12 +78,6 @@
             android:visibility="@{viewModel.rubbishInfoVisibility}"
             android:padding="@dimen/sp_normal"
             android:orientation="vertical">
-<!--            Dia chi-->
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_address"
-                style="@style/default_title"
-                android:text="@{viewModel.rubbishAn}"
-                tools:text="asdf sdfa, asdf"/>
             <!--            House hold collection-->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"

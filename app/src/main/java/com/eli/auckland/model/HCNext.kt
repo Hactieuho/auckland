@@ -3,7 +3,7 @@ package com.eli.auckland.model
 import com.squareup.moshi.Json
 import java.util.*
 
-class HCNext (
+data class HCNext (
     @Json(name = "detail")
     var detail: String? = null,
     @Json(name = "from")

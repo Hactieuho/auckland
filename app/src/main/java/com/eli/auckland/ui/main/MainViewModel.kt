@@ -64,6 +64,18 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+    // Dia chi lay rubbish
+    val rubbishVisibility = Transformations.switchMap(RubbishRepository.instant.currentTownCity) { city ->
+        Transformations.switchMap(currentRoadName) { road ->
+            Transformations.map(currentAddressNumber) { address ->
+                if (city.isNullOrEmpty() || road.isNullOrEmpty() || address.isNullOrEmpty()) {
+                    View.GONE
+                } else {
+                    View.VISIBLE
+                }
+            }
+        }
+    }
 
     // An hien loading
     val loadingVisibility = Transformations.switchMap(RubbishRepository.instant.getTownCitiesResult) { cities ->
