@@ -5,7 +5,7 @@ import java.util.*
 
 data class HCNext (
     @Json(name = "detail")
-    var detail: String? = null,
+    var detail: Date? = null,
     @Json(name = "from")
     var from: Date? = null,
     @Json(name = "to")
