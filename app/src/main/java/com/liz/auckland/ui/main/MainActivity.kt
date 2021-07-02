@@ -1,5 +1,6 @@
 package com.liz.auckland.ui.main
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -9,21 +10,23 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.blankj.utilcode.util.ToastUtils
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.liz.auckland.R
 import com.liz.auckland.app.MainApplication
 import com.liz.auckland.data.RubbishRepository
 import com.liz.auckland.databinding.ActivityMainBinding
+import com.liz.auckland.model.BaseFragmentAdapter
 import com.liz.auckland.receiver.AlarmReceiver
 import com.liz.auckland.resource.Resource
+import com.liz.auckland.ui.home.HomeFragment
+import com.liz.auckland.ui.info.InfoFragment
+import com.liz.auckland.ui.reminder.ReminderFragment
 import com.liz.auckland.util.KEY
 import com.liz.auckland.util.formatDate
 import com.liz.auckland.util.formatRequestCode
 import com.liz.auckland.util.formatTime
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.liz.auckland.model.BaseFragmentAdapter
-import com.liz.auckland.ui.home.HomeFragment
-import com.liz.auckland.ui.info.InfoFragment
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -43,8 +46,35 @@ class MainActivity : AppCompatActivity() {
         viewModel.getTownCities()
         adapter = BaseFragmentAdapter(supportFragmentManager, 0)
         adapter.addFragment(HomeFragment.instance, getString(R.string.home))
+        adapter.addFragment(ReminderFragment.instance, getString(R.string.reminder))
         adapter.addFragment(InfoFragment.instance, getString(R.string.info))
         binding.viewpager.adapter = adapter
+        binding.bottomNavigation.setOnNavigationItemSelectedListener {
+            binding.viewpager.currentItem = when(it.itemId) {
+                R.id.i_reminder -> 1
+                R.id.i_info-> 2
+                else -> 0
+            }
+            true
+        }
+        binding.viewpager.addOnPageChangeListener(object : OnPageChangeListener {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                binding.bottomNavigation.selectedItemId = when(position) {
+                    1 -> R.id.i_reminder
+                    2 -> R.id.i_info
+                    else -> R.id.i_home
+                }
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {}
+        })
     }
 
     private fun observeViewModel() {
@@ -208,6 +238,7 @@ class MainActivity : AppCompatActivity() {
         createAlarmNotification(c.time, "Test")
     }
 
+    @SuppressLint("NewApi")
     fun createAlarmNotification(date: Date?, title: String?) {
         // Get AlarmManager instance
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
