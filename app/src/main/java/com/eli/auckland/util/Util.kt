@@ -32,14 +32,20 @@ inline fun <reified T> SharedPreferences.getList(spListKey: String): ArrayList<T
     return null
 }
 
-fun Date.formatDate() : String {
+fun Date.formatDate() : String? {
     val dateTimeFormat = SimpleDateFormat("EEEE, dd MMMM", Locale.US)
     dateTimeFormat.timeZone = TimeZone.getTimeZone("GMT+00")
     return dateTimeFormat.format(this)
 }
 
-fun Date.formatTime() : String {
+fun Date.formatTime() : String? {
     val dateTimeFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
+    dateTimeFormat.timeZone = TimeZone.getTimeZone("GMT+00")
+    return dateTimeFormat.format(this)
+}
+
+fun Date.formatKey() : String? {
+    val dateTimeFormat = SimpleDateFormat("yyyyMMdd HHmmss", Locale.US)
     dateTimeFormat.timeZone = TimeZone.getTimeZone("GMT+00")
     return dateTimeFormat.format(this)
 }

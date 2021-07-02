@@ -15,6 +15,8 @@ data class HCNext (
 ) {
     fun fromDate() = from?.formatDate()
     fun fromTime() = from?.formatTime()
+    fun fromDateTime() = "${fromDate()}\n${fromTime()}"
     fun toDate() = to?.formatDate()
     fun toTime() = to?.formatTime()
+    fun toDateTime() = "${toDate()}\n${toTime()}"
 }
