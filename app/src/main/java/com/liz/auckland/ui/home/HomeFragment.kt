@@ -1,13 +1,16 @@
-package com.liz.auckland.ui.main
+package com.liz.auckland.ui.home
 
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.ToastUtils
 import com.liz.auckland.R
@@ -21,30 +24,29 @@ import com.liz.auckland.util.formatDate
 import com.liz.auckland.util.formatRequestCode
 import com.liz.auckland.util.formatTime
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.liz.auckland.model.BaseFragmentAdapter
-import com.liz.auckland.ui.home.HomeFragment
-import com.liz.auckland.ui.info.InfoFragment
+import com.liz.auckland.databinding.FragmentHomeBinding
+import com.liz.auckland.ui.main.MainViewModel
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMainBinding
+class HomeFragment : Fragment() {
+    lateinit var binding: FragmentHomeBinding
     lateinit var viewModel: MainViewModel
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        viewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         initUI()
         observeViewModel()
+        return binding.root
     }
 
-    private lateinit var adapter: BaseFragmentAdapter
     private fun initUI() {
         // Lay danh sach town city
         viewModel.getTownCities()
-        adapter = BaseFragmentAdapter(supportFragmentManager, 0)
-        adapter.addFragment(HomeFragment.instance, getString(R.string.home))
-        adapter.addFragment(InfoFragment.instance, getString(R.string.info))
-        binding.viewpager.adapter = adapter
+        binding.tvTownCityList.setOnClickListener { showTownCities() }
+        binding.tvSuburbLocalities.setOnClickListener { showSuburbLocalities() }
+        binding.tvRoadName.setOnClickListener { showRoadNames() }
+        binding.tvAddressNumber.setOnClickListener { showAddressNumbers() }
     }
 
     private fun observeViewModel() {
@@ -136,7 +138,7 @@ class MainActivity : AppCompatActivity() {
             )
         } ?: 0
 
-        MaterialAlertDialogBuilder(this)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.choose_an_town_city))
             .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which -> }
             .setSingleChoiceItems(townCityList, checkedTownCity) { dialog, which ->
@@ -155,7 +157,7 @@ class MainActivity : AppCompatActivity() {
             )
         } ?: 0
 
-        MaterialAlertDialogBuilder(this)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.choose_a_suburb_locality))
             .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which -> }
             .setSingleChoiceItems(suburbLocalityList, checkedLocality) { dialog, which ->
@@ -174,7 +176,7 @@ class MainActivity : AppCompatActivity() {
             )
         } ?: 0
 
-        MaterialAlertDialogBuilder(this)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.choose_a_road_name))
             .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which -> }
             .setSingleChoiceItems(roadNameList, checkedRoadName) { dialog, which ->
@@ -192,7 +194,7 @@ class MainActivity : AppCompatActivity() {
             )
         } ?: 0
 
-        MaterialAlertDialogBuilder(this)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.choose_an_address_number))
             .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which -> }
             .setSingleChoiceItems(addressNumberList, checkedAddressNumber) { dialog, which ->
@@ -210,14 +212,14 @@ class MainActivity : AppCompatActivity() {
 
     fun createAlarmNotification(date: Date?, title: String?) {
         // Get AlarmManager instance
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         // Intent part
-        val intent = Intent(this, AlarmReceiver::class.java)
+        val intent = Intent(context, AlarmReceiver::class.java)
         intent.action = KEY.ALARMS
         intent.putExtra(KEY.NOTIFICATION_TITLE, title)
         // Alarm time
         if (date != null) {
-            val pendingIntent = PendingIntent.getBroadcast(this, date.formatRequestCode(), intent, 0)
+            val pendingIntent = PendingIntent.getBroadcast(context, date.formatRequestCode(), intent, 0)
             val alarmTime = date.time
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent)
             ToastUtils.showLong("Reminder me at ${date.formatDate()} ${date.formatTime()}")
@@ -225,12 +227,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun cancelAlarmNotification(date: Date?) {
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, AlarmReceiver::class.java)
+        val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, AlarmReceiver::class.java)
         if (date != null) {
-            val pendingIntent = PendingIntent.getBroadcast(applicationContext, date.formatRequestCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getBroadcast(activity?.applicationContext, date.formatRequestCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
             alarmManager.cancel(pendingIntent)
             ToastUtils.showLong("Cancel reminder ${date.formatDate()} ${date.formatTime()}")
         }
+    }
+
+    companion object {
+        // Singleton
+        val instance = HomeFragment()
     }
 }

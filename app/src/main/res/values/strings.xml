@@ -13,5 +13,7 @@
     <string name="reminder_me_at">Reminder me at:</string>
     <string name="commercial_collection">Commercial collection</string>
     <string name="channel_name">Auckland Channel</string>
-
+    <string name="home">Home</string>
+    <string name="reminder">Reminder</string>
+    <string name="info">Info</string>
 </resources>
