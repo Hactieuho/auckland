@@ -6,16 +6,16 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.SystemClock
-import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.ToastUtils
 import com.eli.auckland.R
+import com.eli.auckland.app.MainApplication
 import com.eli.auckland.data.RubbishRepository
 import com.eli.auckland.databinding.ActivityMainBinding
 import com.eli.auckland.receiver.AlarmReceiver
 import com.eli.auckland.resource.Resource
+import com.eli.auckland.util.KEY
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MainActivity : AppCompatActivity() {
@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         // Lay danh sach town city
         viewModel.getTownCities()
         binding.tvTownCityList.setOnClickListener { showTownCities() }
+        binding.tvSuburbLocalities.setOnClickListener { showSuburbLocalities() }
         binding.tvRoadName.setOnClickListener { showRoadNames() }
         binding.tvAddressNumber.setOnClickListener { showAddressNumbers() }
     }
@@ -41,12 +42,25 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         viewModel.currentTownCity.observe(this) {
+            // Reset suburb locality
+            RubbishRepository.instant.getSuburbLocalitiesResult.postValue(Resource.Success(null))
+            viewModel.currentSuburbLocality.postValue(null)
+            // Lay danh sach suburb locality khi chon 1 town city
+            if (!it.isNullOrEmpty()) {
+                viewModel.getSuburbLocalities()
+                // Luu lai town city da chon
+                MainApplication.instant.saveToSharePre(KEY.CURRENT_TOWN_CITY, it)
+            }
+        }
+        viewModel.currentSuburbLocality.observe(this) {
             // Reset road name
             RubbishRepository.instant.getRoadNamesResult.postValue(Resource.Success(null))
             viewModel.currentRoadName.postValue(null)
             // Lay danh sach road name khi chon 1 town city
             if (!it.isNullOrEmpty()) {
                 viewModel.getRoadNames()
+                // Luu lai suburb locality da chon
+                MainApplication.instant.saveToSharePre(KEY.CURRENT_SUBURB_LOCALITY, it)
             }
         }
         viewModel.currentRoadName.observe(this) {
@@ -56,6 +70,8 @@ class MainActivity : AppCompatActivity() {
             // Lay danh sach address number khi chon 1 road name
             if (!it.isNullOrEmpty()) {
                 viewModel.getAddressNumbers()
+                // Luu lai road name da chon
+                MainApplication.instant.saveToSharePre(KEY.CURRENT_ROAD_NAME, it)
             }
         }
         viewModel.currentAddressNumber.observe(this) {
@@ -64,10 +80,17 @@ class MainActivity : AppCompatActivity() {
             // Lay thong tin rubbish khi chon 1 address number
             if (!it.isNullOrEmpty()) {
                 viewModel.getRubbishInfo()
+                // Luu lai address number da chon
+                MainApplication.instant.saveToSharePre(KEY.CURRENT_ADDRESS_NUMBER, it)
             }
         }
         viewModel.rubbishAn.observe(this, {})
         RubbishRepository.instant.getTownCitiesResult.observe(this) {
+            if (it is Resource.Error) {
+                ToastUtils.showShort(it.message)
+            }
+        }
+        RubbishRepository.instant.getSuburbLocalitiesResult.observe(this) {
             if (it is Resource.Error) {
                 ToastUtils.showShort(it.message)
             }
@@ -103,6 +126,25 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    fun showSuburbLocalities() {
+        val suburbLocalityList = RubbishRepository.instant.getSuburbLocalitiesResult.value?.data?.toTypedArray()
+        val checkedLocality = viewModel.currentSuburbLocality.value?.let {
+            RubbishRepository.instant.getSuburbLocalitiesResult.value?.data?.indexOf(
+                it
+            )
+        } ?: 0
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(resources.getString(R.string.choose_a_suburb_locality))
+            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which -> }
+            .setSingleChoiceItems(suburbLocalityList, checkedLocality) { dialog, which ->
+                // Danh dau town city hien tai
+                viewModel.currentSuburbLocality.postValue(suburbLocalityList?.get(which))
+                dialog.dismiss()
+            }
+            .show()
+    }
+
     fun showRoadNames() {
         val roadNameList = RubbishRepository.instant.getRoadNamesResult.value?.data?.toTypedArray()
         val checkedRoadName = viewModel.currentRoadName.value?.let {
@@ -112,7 +154,7 @@ class MainActivity : AppCompatActivity() {
         } ?: 0
 
         MaterialAlertDialogBuilder(this)
-            .setTitle(resources.getString(R.string.choose_road_name))
+            .setTitle(resources.getString(R.string.choose_a_road_name))
             .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which -> }
             .setSingleChoiceItems(roadNameList, checkedRoadName) { dialog, which ->
                 viewModel.currentRoadName.postValue(RubbishRepository.instant.getRoadNamesResult.value?.data?.get(which))
@@ -130,7 +172,7 @@ class MainActivity : AppCompatActivity() {
         } ?: 0
 
         MaterialAlertDialogBuilder(this)
-            .setTitle(resources.getString(R.string.choose_address_number))
+            .setTitle(resources.getString(R.string.choose_an_address_number))
             .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which -> }
             .setSingleChoiceItems(addressNumberList, checkedAddressNumber) { dialog, which ->
                 viewModel.currentAddressNumber.postValue(RubbishRepository.instant.getAddressNumbersResult.value?.data?.get(which))

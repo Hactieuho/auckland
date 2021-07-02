@@ -28,10 +28,24 @@
                 android:text="@{viewModel.currentTownCity}"
                 tools:text="asdfa"/>
         </com.google.android.material.textfield.TextInputLayout>
+        <!--        Danh sach suburb locality-->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/default_text_input_layout.select"
+            android:hint="@string/choose_a_suburb_locality"
+            android:padding="@dimen/sp_normal"
+            android:visibility="@{viewModel.suburbLocalityVisibility}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tv_suburb_localities"
+                style="@style/material_edt.disabled"
+                android:text="@{viewModel.currentSuburbLocality}"
+                tools:text="asdfa"/>
+        </com.google.android.material.textfield.TextInputLayout>
 <!--        Danh sach duong-->
         <com.google.android.material.textfield.TextInputLayout
             style="@style/default_text_input_layout.select"
-            android:hint="@string/choose_road_name"
+            android:hint="@string/choose_a_road_name"
             android:padding="@dimen/sp_normal"
             android:visibility="@{viewModel.roadNameVisibility}"
             app:layout_constraintTop_toTopOf="parent"
@@ -45,7 +59,7 @@
         <!--        Danh sach so nha-->
         <com.google.android.material.textfield.TextInputLayout
             style="@style/default_text_input_layout.select"
-            android:hint="@string/choose_address_number"
+            android:hint="@string/choose_an_address_number"
             android:padding="@dimen/sp_normal"
             android:visibility="@{viewModel.addressNumberVisibility}"
             app:layout_constraintTop_toTopOf="parent"
@@ -156,12 +170,15 @@
                         app:layout_constraintStart_toEndOf="@id/tv_household_title"/>
                     <!--                    From-->
                     <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/sw_from_household"
                         style="@style/default_text"
                         android:singleLine="false"
                         android:text="@{viewModel.getRubbishInfoResult.data.getFirstHNext().fromDateTime()}"
-                        android:onClick="@{()->viewModel.alarm(viewModel.getRubbishInfoResult.data.getFirstHNext().from)}"
-                        android:checked="@{viewModel.alarmChecked(viewModel.getRubbishInfoResult.data.getFirstHNext().from)}"
+                        app:onCheckChange="@{viewModel.check}"
+                        app:value="@{viewModel.getRubbishInfoResult.data.getFirstHNext().from}"
+                        android:checked="@{viewModel.alarmFromHouseholdChecked}"
                         android:enabled="@{viewModel.alarmEnabled}"
+                        android:layout_width="0dp"
                         tools:text="Saturday, 13 July\n19:00:00"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintTop_toTopOf="@id/tv_household_from"
@@ -170,13 +187,16 @@
                         app:layout_constraintEnd_toEndOf="parent"/>
                     <!--                    To-->
                     <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/sw_to_household"
                         style="@style/default_text"
                         android:singleLine="false"
                         android:text="@{viewModel.getRubbishInfoResult.data.getFirstHNext().toDateTime()}"
-                        android:checked="@{viewModel.alarmChecked(viewModel.getRubbishInfoResult.data.getFirstHNext().from)}"
-
+                        app:onCheckChange="@{viewModel.check}"
+                        app:value="@{viewModel.getRubbishInfoResult.data.getFirstHNext().to}"
+                        android:checked="@{viewModel.alarmToHouseholdChecked}"
                         android:enabled="@{viewModel.alarmEnabled}"
                         tools:text="Saturday, 13 July\n19:00:00"
+                        android:layout_width="0dp"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintTop_toTopOf="@id/tv_household_to"
                         app:layout_constraintBottom_toBottomOf="@id/tv_household_to_time"
@@ -264,9 +284,15 @@
                         app:layout_constraintStart_toEndOf="@id/tv_commercial_title"/>
                     <!--                    From-->
                     <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/sw_from_commercial"
                         style="@style/default_text"
                         android:singleLine="false"
                         android:text="@{viewModel.getRubbishInfoResult.data.getFirstCNext().fromDateTime()}"
+                        app:onCheckChange="@{viewModel.check}"
+                        app:value="@{viewModel.getRubbishInfoResult.data.getFirstCNext().from}"
+                        android:checked="@{viewModel.alarmFromCommercialChecked}"
+                        android:enabled="@{viewModel.alarmEnabled}"
+                        android:layout_width="0dp"
                         tools:text="Saturday, 13 July\n19:00:00"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintTop_toTopOf="@id/tv_commercial_from"
@@ -275,9 +301,15 @@
                         app:layout_constraintEnd_toEndOf="parent"/>
                     <!--                    To-->
                     <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/sw_to_commercial"
                         style="@style/default_text"
                         android:singleLine="false"
                         android:text="@{viewModel.getRubbishInfoResult.data.getFirstCNext().toDateTime()}"
+                        app:onCheckChange="@{viewModel.check}"
+                        app:value="@{viewModel.getRubbishInfoResult.data.getFirstCNext().to}"
+                        android:checked="@{viewModel.alarmToCommericialChecked}"
+                        android:enabled="@{viewModel.alarmEnabled}"
+                        android:layout_width="0dp"
                         tools:text="Saturday, 13 July\n19:00:00"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintTop_toTopOf="@id/tv_commercial_to"

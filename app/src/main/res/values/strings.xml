@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">Auckland</string>
-    <string name="choose_road_name">Choose road name</string>
     <string name="cancel">Cancel</string>
     <string name="choose_an_town_city">Choose an town city</string>
-    <string name="choose_address_number">Choose address number</string>
+    <string name="choose_a_suburb_locality">Choose a suburb locality</string>
+    <string name="choose_a_road_name">Choose a road name</string>
+    <string name="choose_an_address_number">Choose an address number</string>
     <string name="household_collection">Household collection</string>
     <string name="rubbish">Rubbish</string>
     <string name="from">From</string>

@@ -5,25 +5,45 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import androidx.lifecycle.MutableLiveData
 import com.eli.auckland.BuildConfig
 import com.eli.auckland.R
 import com.eli.auckland.model.Address
+import com.eli.auckland.util.KEY
 import com.eli.auckland.util.getItem
 import com.eli.auckland.util.getList
 import com.eli.auckland.util.saveItem
 import timber.log.Timber
+import java.lang.Exception
+import java.security.Key
 
 class MainApplication : Application() {
+
+    // Danh sach du lieu da luu
+    var savedData = HashMap<String, Any?>()
+
     override fun onCreate() {
         super.onCreate()
         instant = this
         Timber.plant(Timber.DebugTree())
         createNotificationChannel()
+        // Load danh sach du lieu da luu
+        try {
+            savedData = getFromSharedPre(KEY.SAVED_DATA)!!
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     // Shared preference
     fun saveToSharePre(key: String, value: Any?) {
-        getSharedPreferences(getSharePreFileName(), 0).saveItem(key, value)
+        var s = savedData
+        if (s.isNullOrEmpty()) {
+            s = HashMap()
+        }
+        s[key] = value
+        savedData = s
+        getSharedPreferences(getSharePreFileName(), 0).saveItem(KEY.SAVED_DATA, s)
     }
     inline fun <reified T> getFromSharedPre(key: String): T? {
         return getSharedPreferences(getSharePreFileName(), 0).getItem(key)

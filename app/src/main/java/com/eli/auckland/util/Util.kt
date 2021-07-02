@@ -2,9 +2,10 @@ package com.eli.auckland.util
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import androidx.databinding.BindingAdapter
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -48,4 +49,11 @@ fun Date.formatKey() : String? {
     val dateTimeFormat = SimpleDateFormat("yyyyMMdd HHmmss", Locale.US)
     dateTimeFormat.timeZone = TimeZone.getTimeZone("GMT+00")
     return dateTimeFormat.format(this)
+}
+
+@BindingAdapter("app:onCheckChange", "app:value")
+fun SwitchMaterial.onCheckChange(check: (Date?, Boolean?) -> Unit, value: Date?) {
+    isHapticFeedbackEnabled = false
+    setOnClickListener { check(value, null) }
+    setOnCheckedChangeListener (null)
 }
