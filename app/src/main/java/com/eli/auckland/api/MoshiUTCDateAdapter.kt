@@ -13,7 +13,9 @@ class MoshiUTCDateAdapter : JsonAdapter<Date>() {
 
     init {
         dateTimeFormat1 = SimpleDateFormat("yyyyMMdd HHmmss", Locale.US)
+        dateTimeFormat1.timeZone = TimeZone.getTimeZone("GMT+00")
         dateTimeFormat2 = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.US)
+        dateTimeFormat2.timeZone = TimeZone.getTimeZone("GMT+00")
     }
 
     override fun fromJson(reader: JsonReader): Date? {
@@ -31,6 +33,16 @@ class MoshiUTCDateAdapter : JsonAdapter<Date>() {
                 val year = Calendar.getInstance().get(Calendar.YEAR)
                 result = synchronized(dateTimeFormat2) {
                     dateTimeFormat2.parse("$dateAsString $year")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        if (result == null) {
+            try {
+                val year = Calendar.getInstance().get(Calendar.YEAR)
+                result = synchronized(dateTimeFormat2) {
+                    dateTimeFormat2.parse("$dateAsString ${year + 1}")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

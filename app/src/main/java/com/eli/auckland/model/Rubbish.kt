@@ -55,4 +55,11 @@ data class Rubbish(
     var cNext: List<HCNext>? = null,
     @Json(name = "CComment")
     var cComment: String? = null
-)
+) {
+    fun getFirstHNext(): HCNext? {
+        return hNext?.firstOrNull()
+    }
+    fun getFirstCNext(): HCNext? {
+        return cNext?.firstOrNull()
+    }
+}

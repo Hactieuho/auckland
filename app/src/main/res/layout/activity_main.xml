@@ -75,33 +75,128 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="@{viewModel.rubbishInfoVisibility}"
+            android:visibility="@{viewModel.rubbishVisibility}"
             android:padding="@dimen/sp_normal"
             android:orientation="vertical">
             <!--            House hold collection-->
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_title"
+                android:text="@string/household_collection"/>
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/sp_big">
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/sp_normal"
-                    android:orientation="vertical"
-                    android:elevation="@dimen/sp_big">
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/default_title"
-                        android:text="@string/household_collection"/>
+                    android:orientation="horizontal">
                     <!--                Rubbish-->
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_width="wrap_content"
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Rubbish"/>
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <!--                        Title-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/default_title"
+                            android:text="@string/rubbish"/>
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/default_title"
+                            android:text="@string/from"/>
+<!--                        From date-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getFirstHNext().fromDate()}"
+                            tools:text="Friday, 12 July"/>
+<!--                        From time-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getFirstHNext().fromTime()}"
+                            tools:text="06:00:00"/>
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/default_title"
+                            android:text="@string/to"/>
+<!--                        To date-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getFirstHNext().toDate()}"
+                            tools:text="Saturday, 13 July"/>
+                        <!--                        To time-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getFirstHNext().toTime()}"
+                            tools:text="19:00:00"/>
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+                    <!--                Recycling-->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <!--                        Title-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/default_title"
+                            android:text="@string/recycling"/>
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/default_title"
+                            android:text="@string/from"/>
+                        <!--                        From date-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getFirstCNext().fromDate()}"
+                            tools:text="Friday, 12 July"/>
+                        <!--                        From time-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getFirstCNext().fromTime()}"
+                            tools:text="06:00:00"/>
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/default_title"
+                            android:text="@string/to"/>
+                        <!--                        To date-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getFirstCNext().toDate()}"
+                            tools:text="Saturday, 13 July"/>
+                        <!--                        To time-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getFirstCNext().toTime()}"
+                            tools:text="19:00:00"/>
+                    </androidx.appcompat.widget.LinearLayoutCompat>
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </com.google.android.material.card.MaterialCardView>
+<!--            Reminder-->
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_title"
+                android:layout_marginTop="@dimen/sp_normal"
+                android:text="@string/reminder_me_at"/>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="@{viewModel.rubbishInfoVisibility}"
                 android:text="@{viewModel.getRubbishInfoResult.data.toString()}"
                 tools:text="helloworld"/>
         </androidx.appcompat.widget.LinearLayoutCompat>

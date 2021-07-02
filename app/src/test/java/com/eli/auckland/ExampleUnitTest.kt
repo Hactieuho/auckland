@@ -25,4 +25,10 @@ class ExampleUnitTest {
         val date = dateTimeFormat.parse(dateAsString)
         println()
     }
+
+    @Test
+    fun testTimeZone() {
+        val timeZones = TimeZone.getAvailableIDs()
+        println()
+    }
 }

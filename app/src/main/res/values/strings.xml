@@ -5,4 +5,9 @@
     <string name="choose_an_town_city">Choose an town city</string>
     <string name="choose_address_number">Choose address number</string>
     <string name="household_collection">Household collection</string>
+    <string name="rubbish">Rubbish</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="recycling">Recycling</string>
+    <string name="reminder_me_at">Reminder me at:</string>
 </resources>
