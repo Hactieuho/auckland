@@ -17,7 +17,7 @@ import com.liz.auckland.model.MainPagerAdapter
 import com.liz.auckland.resource.Resource
 import com.liz.auckland.util.KEY
 import java.util.*
-import java.util.concurrent.TimeUnit
+
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
         val i = Intent(AlarmClock.ACTION_SET_ALARM)
         val calendar = Calendar.getInstance()
         date?.let { calendar.time = it }
-        val extraDays = calendar.get(Calendar.DAY_OF_WEEK)
+        val extraDays = arrayListOf(calendar.get(Calendar.DAY_OF_WEEK))
         val extraHours = calendar.get(Calendar.HOUR_OF_DAY)
         val extraMinutes = calendar.get(Calendar.MINUTE)
         i.putExtra(AlarmClock.EXTRA_MESSAGE, title)
