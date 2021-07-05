@@ -6,32 +6,35 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TableLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.blankj.utilcode.util.ToastUtils
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.tabs.TabLayoutMediator
 import com.liz.auckland.R
 import com.liz.auckland.app.MainApplication
 import com.liz.auckland.data.RubbishRepository
 import com.liz.auckland.databinding.ActivityMainBinding
-import com.liz.auckland.model.BaseFragmentAdapter
+import com.liz.auckland.model.ScreenSlidePagerAdapter
 import com.liz.auckland.receiver.AlarmReceiver
 import com.liz.auckland.resource.Resource
-import com.liz.auckland.ui.home.HomeFragment
-import com.liz.auckland.ui.info.InfoFragment
-import com.liz.auckland.ui.reminder.ReminderFragment
 import com.liz.auckland.util.KEY
 import com.liz.auckland.util.formatDate
 import com.liz.auckland.util.formatRequestCode
 import com.liz.auckland.util.formatTime
 import java.util.*
 
+
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var viewModel: MainViewModel
+    private lateinit var adapter: ScreenSlidePagerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -40,41 +43,24 @@ class MainActivity : AppCompatActivity() {
         observeViewModel()
     }
 
-    private lateinit var adapter: BaseFragmentAdapter
     private fun initUI() {
         // Lay danh sach town city
         viewModel.getTownCities()
-        adapter = BaseFragmentAdapter(supportFragmentManager, 0)
-        adapter.addFragment(HomeFragment.instance, getString(R.string.home))
-        adapter.addFragment(ReminderFragment.instance, getString(R.string.reminder))
-        adapter.addFragment(InfoFragment.instance, getString(R.string.info))
+        adapter = ScreenSlidePagerAdapter(this)
         binding.viewpager.adapter = adapter
-        binding.bottomNavigation.setOnNavigationItemSelectedListener {
-            binding.viewpager.currentItem = when(it.itemId) {
-                R.id.i_reminder -> 1
-                R.id.i_info-> 2
-                else -> 0
+        TabLayoutMediator(binding.tabLayout, binding.viewpager) { tab, position ->
+            tab.text = when(position) {
+                1 -> getString(R.string.reminder)
+                2 -> getString(R.string.info)
+                else -> getString(R.string.home)
             }
-            true
-        }
-        binding.viewpager.addOnPageChangeListener(object : OnPageChangeListener {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
+            val icon = when(position) {
+                1 -> R.drawable.ic_alarm
+                2 -> R.drawable.ic_info
+                else -> R.drawable.ic_home
             }
-
-            override fun onPageSelected(position: Int) {
-                binding.bottomNavigation.selectedItemId = when(position) {
-                    1 -> R.id.i_reminder
-                    2 -> R.id.i_info
-                    else -> R.id.i_home
-                }
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {}
-        })
+            tab.icon = ContextCompat.getDrawable(this, icon)
+        }.attach()
     }
 
     private fun observeViewModel() {
@@ -156,86 +142,6 @@ class MainActivity : AppCompatActivity() {
                 viewModel.canceledAlarm.postValue(null)
             }
         }
-    }
-
-    fun showTownCities() {
-        val townCityList = RubbishRepository.instant.getTownCitiesResult.value?.data?.toTypedArray()
-        val checkedTownCity = viewModel.currentTownCity.value?.let {
-            RubbishRepository.instant.getTownCitiesResult.value?.data?.indexOf(
-                it
-            )
-        } ?: 0
-
-        MaterialAlertDialogBuilder(this)
-            .setTitle(resources.getString(R.string.choose_an_town_city))
-            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which -> }
-            .setSingleChoiceItems(townCityList, checkedTownCity) { dialog, which ->
-                // Danh dau town city hien tai
-                viewModel.currentTownCity.postValue(RubbishRepository.instant.getTownCitiesResult.value?.data?.get(which))
-                dialog.dismiss()
-            }
-            .show()
-    }
-
-    fun showSuburbLocalities() {
-        val suburbLocalityList = RubbishRepository.instant.getSuburbLocalitiesResult.value?.data?.toTypedArray()
-        val checkedLocality = viewModel.currentSuburbLocality.value?.let {
-            RubbishRepository.instant.getSuburbLocalitiesResult.value?.data?.indexOf(
-                it
-            )
-        } ?: 0
-
-        MaterialAlertDialogBuilder(this)
-            .setTitle(resources.getString(R.string.choose_a_suburb_locality))
-            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which -> }
-            .setSingleChoiceItems(suburbLocalityList, checkedLocality) { dialog, which ->
-                // Danh dau town city hien tai
-                viewModel.currentSuburbLocality.postValue(suburbLocalityList?.get(which))
-                dialog.dismiss()
-            }
-            .show()
-    }
-
-    fun showRoadNames() {
-        val roadNameList = RubbishRepository.instant.getRoadNamesResult.value?.data?.toTypedArray()
-        val checkedRoadName = viewModel.currentRoadName.value?.let {
-            RubbishRepository.instant.getRoadNamesResult.value?.data?.indexOf(
-                it
-            )
-        } ?: 0
-
-        MaterialAlertDialogBuilder(this)
-            .setTitle(resources.getString(R.string.choose_a_road_name))
-            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which -> }
-            .setSingleChoiceItems(roadNameList, checkedRoadName) { dialog, which ->
-                viewModel.currentRoadName.postValue(RubbishRepository.instant.getRoadNamesResult.value?.data?.get(which))
-                dialog.dismiss()
-            }
-            .show()
-    }
-
-    fun showAddressNumbers() {
-        val addressNumberList = RubbishRepository.instant.getAddressNumbersResult.value?.data?.toTypedArray()
-        val checkedAddressNumber = viewModel.currentAddressNumber.value?.let {
-            RubbishRepository.instant.getAddressNumbersResult.value?.data?.indexOf(
-                it
-            )
-        } ?: 0
-
-        MaterialAlertDialogBuilder(this)
-            .setTitle(resources.getString(R.string.choose_an_address_number))
-            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which -> }
-            .setSingleChoiceItems(addressNumberList, checkedAddressNumber) { dialog, which ->
-                viewModel.currentAddressNumber.postValue(RubbishRepository.instant.getAddressNumbersResult.value?.data?.get(which))
-                dialog.dismiss()
-            }
-            .show()
-    }
-
-    fun testNotification(view: View) {
-        val c = Calendar.getInstance()
-        c.add(Calendar.SECOND, 5)
-        createAlarmNotification(c.time, "Test")
     }
 
     @SuppressLint("NewApi")

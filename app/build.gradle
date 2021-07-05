@@ -74,4 +74,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutine"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutine"
     implementation 'com.blankj:utilcodex:1.30.6'
+
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
 }
