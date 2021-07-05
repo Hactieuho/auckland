@@ -24,20 +24,8 @@ class MainViewModel : ViewModel() {
     val currentAddressNumber = RubbishRepository.instant.currentAddressNumber
     // Thong tin rubbish
     val getRubbishInfoResult = RubbishRepository.instant.getRubbishInfoResult
-    // Danh sach alarm
-    val alarms = MutableLiveData(LinkedTreeMap<String, Date>())
-    // Alarm vua them
-    val addedAlarm = MutableLiveData<Date?>(null)
-    // Alarm vua xoa
-    val canceledAlarm = MutableLiveData<Date?>(null)
-
-    init {
-        // Lay danh sach alarm
-        val a = MainApplication.instant.savedData[KEY.ALARMS]
-        if (a != null) {
-            alarms.postValue(a as LinkedTreeMap<String, Date>?)
-        }
-    }
+    // Them alarm
+    val addAlarm = MutableLiveData<String?>(null)
 
     // An hien suburb locality
     val suburbLocalityVisibility = Transformations.switchMap(RubbishRepository.instant.getTownCitiesResult) { cities ->
@@ -155,49 +143,7 @@ class MainViewModel : ViewModel() {
             }
         }
     }
-    // Chon/khong chon alarm
-    val alarmFromHouseholdChecked = Transformations.switchMap(RubbishRepository.instant.getRubbishInfoResult) { rubbishInfo ->
-        Transformations.map(alarms) { a ->
-            val key = rubbishInfo.data?.getFirstHNext()?.from?.formatKey()
-            rubbishInfo.isSuccess() && a.containsKey(key)
-        }
-    }
-    val alarmToHouseholdChecked = Transformations.switchMap(RubbishRepository.instant.getRubbishInfoResult) { rubbishInfo ->
-        Transformations.map(alarms) { a ->
-            val key = rubbishInfo.data?.getFirstHNext()?.to?.formatKey()
-            rubbishInfo.isSuccess() && a.containsKey(key)
-        }
-    }
-    val alarmFromCommercialChecked = Transformations.switchMap(RubbishRepository.instant.getRubbishInfoResult) { rubbishInfo ->
-        Transformations.map(alarms) { a ->
-            val key = rubbishInfo.data?.getFirstCNext()?.from?.formatKey()
-            rubbishInfo.isSuccess() && a.containsKey(key)
-        }
-    }
-    val alarmToCommericialChecked = Transformations.switchMap(RubbishRepository.instant.getRubbishInfoResult) { rubbishInfo ->
-        Transformations.map(alarms) { a ->
-            val key = rubbishInfo.data?.getFirstCNext()?.to?.formatKey()
-            rubbishInfo.isSuccess() && a.containsKey(key)
-        }
-    }
 
-    val onAlarmCheck: (Date?)->Unit = { alarm(it) }
+    val alarm: (String?)->Unit = { addAlarm.postValue(it) }
 
-    fun alarm(date: Date?) {
-        var a = alarms.value
-        if (a == null) {
-            a = LinkedTreeMap()
-        }
-        val key = date?.formatKey()
-        if (a.containsKey(key)) {
-            canceledAlarm.postValue(date)
-            a.remove(key)
-        } else {
-            addedAlarm.postValue(date)
-            date?.let { d -> a.put(key.toString(), d) }
-        }
-        alarms.postValue(a)
-        // Luu lai danh sach alarm
-        MainApplication.instant.saveToSharePre(KEY.ALARMS, a)
-    }
 }

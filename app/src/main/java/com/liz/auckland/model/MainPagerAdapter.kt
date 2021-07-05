@@ -7,7 +7,7 @@ import com.liz.auckland.ui.home.HomeFragment
 import com.liz.auckland.ui.info.InfoFragment
 import com.liz.auckland.ui.reminder.ReminderFragment
 
-class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
+class MainPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
     override fun getItemCount(): Int = 3
 
     override fun createFragment(position: Int): Fragment = when(position) {

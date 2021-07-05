@@ -2,6 +2,7 @@ package com.liz.auckland.util
 
 import android.content.SharedPreferences
 import android.view.MotionEvent
+import android.widget.Button
 import androidx.core.content.edit
 import androidx.databinding.BindingAdapter
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -54,9 +55,7 @@ fun Date.formatKey() : String? {
 
 fun Date.formatRequestCode() = (this.time/1000).toInt()
 
-@BindingAdapter("app:onCheckChange", "app:value")
-fun SwitchMaterial.onCheckChange(check: (Date?) -> Unit, value: Date?) {
-    setOnTouchListener { v, event -> event.actionMasked == MotionEvent.ACTION_MOVE }
-    setOnClickListener { check(value) }
-    setOnCheckedChangeListener (null)
+@BindingAdapter("app:onClick", "app:key")
+fun Button.onClick(check: (String?) -> Unit, key: String?) {
+    setOnClickListener { check(key) }
 }

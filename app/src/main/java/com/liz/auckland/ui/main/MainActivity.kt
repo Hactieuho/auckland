@@ -1,15 +1,8 @@
 package com.liz.auckland.ui.main
 
-import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TableLayout
+import android.provider.AlarmClock
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -20,20 +13,16 @@ import com.liz.auckland.R
 import com.liz.auckland.app.MainApplication
 import com.liz.auckland.data.RubbishRepository
 import com.liz.auckland.databinding.ActivityMainBinding
-import com.liz.auckland.model.ScreenSlidePagerAdapter
-import com.liz.auckland.receiver.AlarmReceiver
+import com.liz.auckland.model.MainPagerAdapter
 import com.liz.auckland.resource.Resource
 import com.liz.auckland.util.KEY
-import com.liz.auckland.util.formatDate
-import com.liz.auckland.util.formatRequestCode
-import com.liz.auckland.util.formatTime
 import java.util.*
-
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var viewModel: MainViewModel
-    private lateinit var adapter: ScreenSlidePagerAdapter
+    private lateinit var adapter: MainPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     private fun initUI() {
         // Lay danh sach town city
         viewModel.getTownCities()
-        adapter = ScreenSlidePagerAdapter(this)
+        adapter = MainPagerAdapter(this)
         binding.viewpager.adapter = adapter
         TabLayoutMediator(binding.tabLayout, binding.viewpager) { tab, position ->
             tab.text = when(position) {
@@ -130,44 +119,48 @@ class MainActivity : AppCompatActivity() {
                 ToastUtils.showShort(it.message)
             }
         }
-        viewModel.addedAlarm.observe(this) {
-            if (it != null) {
-                createAlarmNotification(it, viewModel.rubbishAn.value)
-                viewModel.addedAlarm.postValue(null)
-            }
-        }
-        viewModel.canceledAlarm.observe(this) {
-            if (it != null) {
-                cancelAlarmNotification(it)
-                viewModel.canceledAlarm.postValue(null)
+        viewModel.addAlarm.observe(this) {
+            if (!it.isNullOrEmpty()) {
+                val date = when (it) {
+                    KEY.HOUSEHOLD_RUBBISH_FROM -> viewModel.getRubbishInfoResult.value?.data?.getFirstHNext()?.from
+                    KEY.HOUSEHOLD_RUBBISH_TO -> viewModel.getRubbishInfoResult.value?.data?.getFirstHNext()?.to
+                    KEY.HOUSEHOLD_RECYCLING_FROM -> viewModel.getRubbishInfoResult.value?.data?.getSecondHNext()?.from
+                    KEY.HOUSEHOLD_RECYCLING_TO -> viewModel.getRubbishInfoResult.value?.data?.getSecondHNext()?.to
+                    KEY.COMMERCIAL_RUBBISH_FROM -> viewModel.getRubbishInfoResult.value?.data?.getFirstCNext()?.from
+                    KEY.COMMERCIAL_RUBBISH_TO -> viewModel.getRubbishInfoResult.value?.data?.getFirstCNext()?.to
+                    KEY.COMMERCIAL_RECYCLING_FROM -> viewModel.getRubbishInfoResult.value?.data?.getSecondHNext()?.from
+                    KEY.COMMERCIAL_RECYCLING_TO -> viewModel.getRubbishInfoResult.value?.data?.getSecondHNext()?.to
+                    else -> null
+                }
+                val title = when (it) {
+                    KEY.HOUSEHOLD_RUBBISH_FROM -> "Household rubbish from ${viewModel.getRubbishInfoResult.value?.data?.location}"
+                    KEY.HOUSEHOLD_RUBBISH_TO -> "Household rubbish to ${viewModel.getRubbishInfoResult.value?.data?.location}"
+                    KEY.HOUSEHOLD_RECYCLING_FROM -> "Household recycling from ${viewModel.getRubbishInfoResult.value?.data?.location}"
+                    KEY.HOUSEHOLD_RECYCLING_TO -> "Household recycling to ${viewModel.getRubbishInfoResult.value?.data?.location}"
+                    KEY.COMMERCIAL_RUBBISH_FROM -> "Commercial rubbish from ${viewModel.getRubbishInfoResult.value?.data?.location}"
+                    KEY.COMMERCIAL_RUBBISH_TO -> "Commercial rubbish to ${viewModel.getRubbishInfoResult.value?.data?.location}"
+                    KEY.COMMERCIAL_RECYCLING_FROM -> "Commercial recycling from ${viewModel.getRubbishInfoResult.value?.data?.location}"
+                    KEY.COMMERCIAL_RECYCLING_TO -> "Commercial recycling to ${viewModel.getRubbishInfoResult.value?.data?.location}"
+                    else -> ""
+                }
+                createAlarm(date, title)
+                viewModel.addAlarm.postValue(null)
             }
         }
     }
 
-    @SuppressLint("NewApi")
-    fun createAlarmNotification(date: Date?, title: String?) {
-        // Get AlarmManager instance
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        // Intent part
-        val intent = Intent(this, AlarmReceiver::class.java)
-        intent.action = KEY.ALARMS
-        intent.putExtra(KEY.NOTIFICATION_TITLE, title)
-        // Alarm time
-        if (date != null) {
-            val pendingIntent = PendingIntent.getBroadcast(this, date.formatRequestCode(), intent, 0)
-            val alarmTime = date.time
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent)
-            ToastUtils.showLong("Reminder me at ${date.formatDate()} ${date.formatTime()}")
-        }
-    }
-
-    fun cancelAlarmNotification(date: Date?) {
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, AlarmReceiver::class.java)
-        if (date != null) {
-            val pendingIntent = PendingIntent.getBroadcast(applicationContext, date.formatRequestCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
-            alarmManager.cancel(pendingIntent)
-            ToastUtils.showLong("Cancel reminder ${date.formatDate()} ${date.formatTime()}")
-        }
+    fun createAlarm(date: Date?, title: String?) {
+        val i = Intent(AlarmClock.ACTION_SET_ALARM)
+        val calendar = Calendar.getInstance()
+        date?.let { calendar.time = it }
+        val extraDays = calendar.get(Calendar.DAY_OF_WEEK)
+        val extraHours = calendar.get(Calendar.HOUR_OF_DAY)
+        val extraMinutes = calendar.get(Calendar.MINUTE)
+        i.putExtra(AlarmClock.EXTRA_MESSAGE, title)
+        i.putExtra(AlarmClock.EXTRA_DAYS, extraDays)
+        i.putExtra(AlarmClock.EXTRA_HOUR, extraHours)
+        i.putExtra(AlarmClock.EXTRA_MINUTES, extraMinutes)
+        i.putExtra(AlarmClock.EXTRA_SKIP_UI, false)
+        startActivity(i)
     }
 }

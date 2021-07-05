@@ -7,6 +7,7 @@
         <variable
             name="viewModel"
             type="com.liz.auckland.ui.main.MainViewModel" />
+        <import type="com.liz.auckland.util.KEY"/>
     </data>
     <ScrollView
         android:layout_width="match_parent"
@@ -167,38 +168,138 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/tv_household_title"/>
                         <!--                    From-->
-                        <com.google.android.material.switchmaterial.SwitchMaterial
+                        <Button
                             android:id="@+id/sw_from_household"
-                            style="@style/default_text"
-                            android:singleLine="false"
+                            style="@style/default_button"
                             android:text="@{viewModel.getRubbishInfoResult.data.getFirstHNext().fromDateTime()}"
-                            app:onCheckChange="@{viewModel.onAlarmCheck}"
-                            app:value="@{viewModel.getRubbishInfoResult.data.getFirstHNext().from}"
-                            android:checked="@{viewModel.alarmFromHouseholdChecked}"
+                            app:onClick="@{viewModel.alarm}"
+                            app:key="@{KEY.HOUSEHOLD_RECYCLING_FROM}"
                             android:enabled="@{viewModel.alarmEnabled}"
                             android:layout_width="0dp"
                             tools:text="Saturday, 13 July\n19:00:00"
-                            app:layout_constraintHorizontal_bias="0.0"
+                            tools:enabled="false"
                             app:layout_constraintTop_toTopOf="@id/tv_household_from"
                             app:layout_constraintBottom_toBottomOf="@id/tv_household_from_time"
                             app:layout_constraintStart_toStartOf="@id/tv_household_reminder"
                             app:layout_constraintEnd_toEndOf="parent"/>
                         <!--                    To-->
-                        <com.google.android.material.switchmaterial.SwitchMaterial
+                        <Button
                             android:id="@+id/sw_to_household"
-                            style="@style/default_text"
-                            android:singleLine="false"
+                            style="@style/default_button"
                             android:text="@{viewModel.getRubbishInfoResult.data.getFirstHNext().toDateTime()}"
-                            app:onCheckChange="@{viewModel.onAlarmCheck}"
-                            app:value="@{viewModel.getRubbishInfoResult.data.getFirstHNext().to}"
-                            android:checked="@{viewModel.alarmToHouseholdChecked}"
+                            app:onClick="@{viewModel.alarm}"
+                            app:key="@{KEY.HOUSEHOLD_RECYCLING_TO}"
                             android:enabled="@{viewModel.alarmEnabled}"
                             tools:text="Saturday, 13 July\n19:00:00"
                             android:layout_width="0dp"
-                            app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintTop_toTopOf="@id/tv_household_to"
                             app:layout_constraintBottom_toBottomOf="@id/tv_household_to_time"
                             app:layout_constraintStart_toStartOf="@id/tv_household_reminder"
+                            app:layout_constraintEnd_toEndOf="parent"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/sp_normal"
+                    android:elevation="@dimen/sp_big">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/sp_small"
+                        android:padding="@dimen/sp_normal">
+                        <!--                        Title-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_household_recycling_title"
+                            style="@style/default_title"
+                            android:text="@string/recycling"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_household_recycling_from"
+                            style="@style/default_title"
+                            android:text="@string/from"
+                            app:layout_constraintTop_toBottomOf="@id/tv_household_recycling_title"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                        <!--                        From date-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_household_recycling_from_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getSecondHNext().fromDate()}"
+                            tools:text="Friday, 12 July"
+                            app:layout_constraintTop_toBottomOf="@id/tv_household_recycling_from"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                        <!--                        From time-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_household_recycling_from_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getSecondHNext().fromTime()}"
+                            tools:text="06:00:00"
+                            app:layout_constraintTop_toBottomOf="@id/tv_household_recycling_from_date"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_household_recycling_to"
+                            style="@style/default_title"
+                            android:text="@string/to"
+                            app:layout_constraintTop_toBottomOf="@id/tv_household_recycling_from_time"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                        <!--                        To date-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_household_recycling_to_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getSecondHNext().toDate()}"
+                            tools:text="Saturday, 13 July"
+                            app:layout_constraintTop_toBottomOf="@id/tv_household_recycling_to"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                        <!--                        To time-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_household_recycling_to_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getSecondHNext().toTime()}"
+                            tools:text="19:00:00"
+                            app:layout_constraintTop_toBottomOf="@id/tv_household_recycling_to_date"
+                            app:layout_constraintStart_toStartOf="parent"/>
+
+                        <!--            Reminder-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_household_recycling_reminder"
+                            style="@style/default_title"
+                            android:text="@string/reminder_me_at"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/tv_household_recycling_title"/>
+                        <!--                    From-->
+                        <Button
+                            android:id="@+id/sw_from_household_recycling"
+                            style="@style/default_button"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getSecondHNext().fromDateTime()}"
+                            app:onClick="@{viewModel.alarm}"
+                            app:key="@{KEY.HOUSEHOLD_RECYCLING_FROM}"
+                            android:enabled="@{viewModel.alarmEnabled}"
+                            android:layout_width="0dp"
+                            tools:text="Saturday, 13 July\n19:00:00"
+                            app:layout_constraintTop_toTopOf="@id/tv_household_recycling_from"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_household_recycling_from_time"
+                            app:layout_constraintStart_toStartOf="@id/tv_household_recycling_reminder"
+                            app:layout_constraintEnd_toEndOf="parent"/>
+                        <!--                    To-->
+                        <Button
+                            android:id="@+id/sw_to_household_recycling"
+                            style="@style/default_button"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getSecondHNext().toDateTime()}"
+                            app:onClick="@{viewModel.alarm}"
+                            app:key="@{KEY.HOUSEHOLD_RECYCLING_TO}"
+                            android:enabled="@{viewModel.alarmEnabled}"
+                            tools:text="Saturday, 13 July\n19:00:00"
+                            android:layout_width="0dp"
+                            app:layout_constraintTop_toTopOf="@id/tv_household_recycling_to"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_household_recycling_to_time"
+                            app:layout_constraintStart_toStartOf="@id/tv_household_recycling_reminder"
                             app:layout_constraintEnd_toEndOf="parent"/>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -222,7 +323,7 @@
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tv_commercial_title"
                             style="@style/default_title"
-                            android:text="@string/recycling"
+                            android:text="@string/rubbish"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintStart_toStartOf="parent"/>
                         <androidx.appcompat.widget.AppCompatTextView
@@ -283,14 +384,12 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/tv_commercial_title"/>
                         <!--                    From-->
-                        <com.google.android.material.switchmaterial.SwitchMaterial
+                        <Button
                             android:id="@+id/sw_from_commercial"
-                            style="@style/default_text"
-                            android:singleLine="false"
+                            style="@style/default_button"
                             android:text="@{viewModel.getRubbishInfoResult.data.getFirstCNext().fromDateTime()}"
-                            app:onCheckChange="@{viewModel.onAlarmCheck}"
-                            app:value="@{viewModel.getRubbishInfoResult.data.getFirstCNext().from}"
-                            android:checked="@{viewModel.alarmFromCommercialChecked}"
+                            app:onClick="@{viewModel.alarm}"
+                            app:key="@{KEY.COMMERCIAL_RUBBISH_FROM}"
                             android:enabled="@{viewModel.alarmEnabled}"
                             android:layout_width="0dp"
                             tools:text="Saturday, 13 July\n19:00:00"
@@ -300,14 +399,12 @@
                             app:layout_constraintStart_toStartOf="@id/tv_commercial_reminder"
                             app:layout_constraintEnd_toEndOf="parent"/>
                         <!--                    To-->
-                        <com.google.android.material.switchmaterial.SwitchMaterial
+                        <Button
                             android:id="@+id/sw_to_commercial"
-                            style="@style/default_text"
-                            android:singleLine="false"
+                            style="@style/default_button"
                             android:text="@{viewModel.getRubbishInfoResult.data.getFirstCNext().toDateTime()}"
-                            app:onCheckChange="@{viewModel.onAlarmCheck}"
-                            app:value="@{viewModel.getRubbishInfoResult.data.getFirstCNext().to}"
-                            android:checked="@{viewModel.alarmToCommericialChecked}"
+                            app:onClick="@{viewModel.alarm}"
+                            app:key="@{KEY.COMMERCIAL_RUBBISH_TO}"
                             android:enabled="@{viewModel.alarmEnabled}"
                             android:layout_width="0dp"
                             tools:text="Saturday, 13 July\n19:00:00"
@@ -315,6 +412,113 @@
                             app:layout_constraintTop_toTopOf="@id/tv_commercial_to"
                             app:layout_constraintBottom_toBottomOf="@id/tv_commercial_to_time"
                             app:layout_constraintStart_toStartOf="@id/tv_commercial_reminder"
+                            app:layout_constraintEnd_toEndOf="parent"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/sp_normal"
+                    android:elevation="@dimen/sp_big">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/sp_small"
+                        android:padding="@dimen/sp_normal">
+                        <!--                        Title-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_commericial_recycling_title"
+                            style="@style/default_title"
+                            android:text="@string/recycling"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_commericial_recycling_from"
+                            style="@style/default_title"
+                            android:text="@string/from"
+                            app:layout_constraintTop_toBottomOf="@id/tv_commericial_recycling_title"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                        <!--                        From date-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_commericial_recycling_from_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getSecondCNext().fromDate()}"
+                            tools:text="Friday, 12 July"
+                            app:layout_constraintTop_toBottomOf="@id/tv_commericial_recycling_from"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                        <!--                        From time-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_commericial_recycling_from_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getSecondCNext().fromTime()}"
+                            tools:text="06:00:00"
+                            app:layout_constraintTop_toBottomOf="@id/tv_commericial_recycling_from_date"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_commericial_recycling_to"
+                            style="@style/default_title"
+                            android:text="@string/to"
+                            app:layout_constraintTop_toBottomOf="@id/tv_commericial_recycling_from_time"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                        <!--                        To date-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_commericial_recycling_to_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getSecondCNext().toDate()}"
+                            tools:text="Saturday, 13 July"
+                            app:layout_constraintTop_toBottomOf="@id/tv_commericial_recycling_to"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                        <!--                        To time-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_commericial_recycling_to_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getSecondCNext().toTime()}"
+                            tools:text="19:00:00"
+                            app:layout_constraintTop_toBottomOf="@id/tv_commericial_recycling_to_date"
+                            app:layout_constraintStart_toStartOf="parent"/>
+
+                        <!--            Reminder-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_commericial_recycling_reminder"
+                            style="@style/default_title"
+                            android:text="@string/reminder_me_at"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/tv_commericial_recycling_title"/>
+                        <!--                    From-->
+                        <Button
+                            android:id="@+id/sw_from_commericial_recycling"
+                            style="@style/default_button"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getSecondCNext().fromDateTime()}"
+                            app:onClick="@{viewModel.alarm}"
+                            app:key="@{KEY.COMMERCIAL_RECYCLING_FROM}"
+                            android:enabled="@{viewModel.alarmEnabled}"
+                            android:layout_width="0dp"
+                            tools:text="Saturday, 13 July\n19:00:00"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintTop_toTopOf="@id/tv_commericial_recycling_from"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_commericial_recycling_from_time"
+                            app:layout_constraintStart_toStartOf="@id/tv_commericial_recycling_reminder"
+                            app:layout_constraintEnd_toEndOf="parent"/>
+                        <!--                    To-->
+                        <Button
+                            android:id="@+id/sw_to_commericial_recycling"
+                            style="@style/default_button"
+                            android:text="@{viewModel.getRubbishInfoResult.data.getSecondCNext().toDateTime()}"
+                            app:onClick="@{viewModel.alarm}"
+                            app:key="@{KEY.COMMERCIAL_RECYCLING_TO}"
+                            android:enabled="@{viewModel.alarmEnabled}"
+                            tools:text="Saturday, 13 July\n19:00:00"
+                            android:layout_width="0dp"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintTop_toTopOf="@id/tv_commericial_recycling_to"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_commericial_recycling_to_time"
+                            app:layout_constraintStart_toStartOf="@id/tv_commericial_recycling_reminder"
                             app:layout_constraintEnd_toEndOf="parent"/>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
