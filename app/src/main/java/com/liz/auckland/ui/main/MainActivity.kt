@@ -3,12 +3,17 @@ package com.liz.auckland.ui.main
 import android.content.Intent
 import android.os.Bundle
 import android.provider.AlarmClock
+import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.ToastUtils
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.liz.auckland.R
 import com.liz.auckland.app.MainApplication
 import com.liz.auckland.data.RubbishRepository
@@ -21,13 +26,12 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    lateinit var viewModel: MainViewModel
+    val viewModel: MainViewModel by viewModels()
     private lateinit var adapter: MainPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         initUI()
         observeViewModel()
     }
@@ -143,10 +147,45 @@ class MainActivity : AppCompatActivity() {
                     KEY.COMMERCIAL_RECYCLING_TO -> "Commercial recycling to ${viewModel.getRubbishInfoResult.value?.data?.location}"
                     else -> ""
                 }
-                createAlarm(date, title)
+                onChooseTime(date, title)
                 viewModel.addAlarm.postValue(null)
             }
         }
+    }
+
+    // Chon thoi diem bao thuc (ngay, gio)
+    fun onChooseTime(date: Date?, title: String?) {
+        // Chon ngay
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Choose a day")
+            .setSelection(date?.time)
+            .build()
+        datePicker.addOnPositiveButtonClickListener { selection: Long? ->
+            // Chon gio
+            val c = Calendar.getInstance()
+            date?.time?.let { c.timeInMillis = it }
+            val timePicker = MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(c[Calendar.HOUR_OF_DAY])
+                .setMinute(c[Calendar.MINUTE])
+                .setTitleText("Chọn Giờ Phát")
+                .build()
+            timePicker.show(
+                supportFragmentManager,
+                MainActivity::class.java.simpleName
+            )
+            timePicker.addOnPositiveButtonClickListener { v: View? ->
+                val calendar = Calendar.getInstance()
+                selection?.let { calendar.timeInMillis = it }
+                calendar[Calendar.HOUR_OF_DAY] = timePicker.hour
+                calendar[Calendar.MINUTE] = timePicker.minute
+                createAlarm(calendar.time, title)
+            }
+        }
+        datePicker.show(
+            supportFragmentManager,
+            MainActivity::class.java.simpleName
+        )
     }
 
     fun createAlarm(date: Date?, title: String?) {

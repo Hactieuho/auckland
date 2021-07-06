@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.liz.auckland.R
 import com.liz.auckland.databinding.FragmentReminderBinding
@@ -16,11 +17,10 @@ import com.liz.auckland.ui.main.MainViewModel
 
 class ReminderFragment : Fragment() {
     lateinit var binding: FragmentReminderBinding
-    lateinit var viewModel: MainViewModel
+    val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_reminder, container, false)
-        viewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         initUI()
         observeViewModel()
         return binding.root
