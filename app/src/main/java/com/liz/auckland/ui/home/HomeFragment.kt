@@ -13,6 +13,7 @@ import com.liz.auckland.data.RubbishRepository
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.liz.auckland.databinding.FragmentHomeBinding
 import com.liz.auckland.ui.main.MainViewModel
+import java.util.jar.Attributes
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
@@ -115,5 +116,8 @@ class HomeFragment : Fragment() {
     companion object {
         // Singleton
         val instance = HomeFragment()
+        var key = "a"
+        val name = "2errt"
+        const val PUBLIC_NAME = "2errt"
     }
 }

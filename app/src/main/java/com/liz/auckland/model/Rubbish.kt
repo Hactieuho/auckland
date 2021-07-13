@@ -59,13 +59,7 @@ data class Rubbish(
     fun getFirstHNext(): HCNext? {
         return hNext?.firstOrNull()
     }
-    fun getFirstCNext(): HCNext? {
-        return cNext?.firstOrNull()
-    }
     fun getSecondHNext(): HCNext? {
         return hNext?.getOrNull(1)
-    }
-    fun getSecondCNext(): HCNext? {
-        return cNext?.getOrNull(1)
     }
 }

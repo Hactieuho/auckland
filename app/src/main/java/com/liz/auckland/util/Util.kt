@@ -8,6 +8,7 @@ import androidx.databinding.BindingAdapter
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.liz.auckland.ui.home.HomeFragment
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -37,19 +38,19 @@ inline fun <reified T> SharedPreferences.getList(spListKey: String): ArrayList<T
 
 fun Date.formatDate() : String? {
     val dateTimeFormat = SimpleDateFormat("EEEE, dd MMMM", Locale.US)
-    dateTimeFormat.timeZone = TimeZone.getTimeZone("GMT+00")
+    dateTimeFormat.timeZone = TimeZone.getTimeZone("UTC")
     return dateTimeFormat.format(this)
 }
 
 fun Date.formatTime() : String? {
     val dateTimeFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
-    dateTimeFormat.timeZone = TimeZone.getTimeZone("GMT+00")
+    dateTimeFormat.timeZone = TimeZone.getTimeZone("UTC")
     return dateTimeFormat.format(this)
 }
 
 fun Date.formatKey() : String? {
     val dateTimeFormat = SimpleDateFormat("yyyyMMdd HHmmss", Locale.US)
-    dateTimeFormat.timeZone = TimeZone.getTimeZone("GMT+00")
+    dateTimeFormat.timeZone = TimeZone.getTimeZone("UTC")
     return dateTimeFormat.format(this)
 }
 

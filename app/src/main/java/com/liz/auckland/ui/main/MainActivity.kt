@@ -127,24 +127,12 @@ class MainActivity : AppCompatActivity() {
             if (!it.isNullOrEmpty()) {
                 val date = when (it) {
                     KEY.HOUSEHOLD_RUBBISH_FROM -> viewModel.getRubbishInfoResult.value?.data?.getFirstHNext()?.from
-                    KEY.HOUSEHOLD_RUBBISH_TO -> viewModel.getRubbishInfoResult.value?.data?.getFirstHNext()?.to
                     KEY.HOUSEHOLD_RECYCLING_FROM -> viewModel.getRubbishInfoResult.value?.data?.getSecondHNext()?.from
-                    KEY.HOUSEHOLD_RECYCLING_TO -> viewModel.getRubbishInfoResult.value?.data?.getSecondHNext()?.to
-                    KEY.COMMERCIAL_RUBBISH_FROM -> viewModel.getRubbishInfoResult.value?.data?.getFirstCNext()?.from
-                    KEY.COMMERCIAL_RUBBISH_TO -> viewModel.getRubbishInfoResult.value?.data?.getFirstCNext()?.to
-                    KEY.COMMERCIAL_RECYCLING_FROM -> viewModel.getRubbishInfoResult.value?.data?.getSecondHNext()?.from
-                    KEY.COMMERCIAL_RECYCLING_TO -> viewModel.getRubbishInfoResult.value?.data?.getSecondHNext()?.to
                     else -> null
                 }
                 val title = when (it) {
-                    KEY.HOUSEHOLD_RUBBISH_FROM -> "Household rubbish from ${viewModel.getRubbishInfoResult.value?.data?.location}"
-                    KEY.HOUSEHOLD_RUBBISH_TO -> "Household rubbish to ${viewModel.getRubbishInfoResult.value?.data?.location}"
-                    KEY.HOUSEHOLD_RECYCLING_FROM -> "Household recycling from ${viewModel.getRubbishInfoResult.value?.data?.location}"
-                    KEY.HOUSEHOLD_RECYCLING_TO -> "Household recycling to ${viewModel.getRubbishInfoResult.value?.data?.location}"
-                    KEY.COMMERCIAL_RUBBISH_FROM -> "Commercial rubbish from ${viewModel.getRubbishInfoResult.value?.data?.location}"
-                    KEY.COMMERCIAL_RUBBISH_TO -> "Commercial rubbish to ${viewModel.getRubbishInfoResult.value?.data?.location}"
-                    KEY.COMMERCIAL_RECYCLING_FROM -> "Commercial recycling from ${viewModel.getRubbishInfoResult.value?.data?.location}"
-                    KEY.COMMERCIAL_RECYCLING_TO -> "Commercial recycling to ${viewModel.getRubbishInfoResult.value?.data?.location}"
+                    KEY.HOUSEHOLD_RUBBISH_FROM -> "Household rubbish"
+                    KEY.HOUSEHOLD_RECYCLING_FROM -> "Household recycling"
                     else -> ""
                 }
                 onChooseTime(date, title)
@@ -163,12 +151,12 @@ class MainActivity : AppCompatActivity() {
         datePicker.addOnPositiveButtonClickListener { selection: Long? ->
             // Chon gio
             val c = Calendar.getInstance()
-            date?.time?.let { c.timeInMillis = it }
+            date?.time?.let { c.timeInMillis = it - c.timeZone.rawOffset }
             val timePicker = MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_24H)
                 .setHour(c[Calendar.HOUR_OF_DAY])
                 .setMinute(c[Calendar.MINUTE])
-                .setTitleText("Chọn Giờ Phát")
+                .setTitleText("Choose a time")
                 .build()
             timePicker.show(
                 supportFragmentManager,

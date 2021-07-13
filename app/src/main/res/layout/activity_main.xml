@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabPadding="0dp"
+            android:visibility="gone"
             app:tabTextAppearance="@style/MyCustomTextAppearance"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

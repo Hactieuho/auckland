@@ -13,9 +13,9 @@ class MoshiUTCDateAdapter : JsonAdapter<Date>() {
 
     init {
         dateTimeFormat1 = SimpleDateFormat("yyyyMMdd HHmmss", Locale.US)
-        dateTimeFormat1.timeZone = TimeZone.getTimeZone("GMT+00")
+        dateTimeFormat1.timeZone = TimeZone.getTimeZone("UTC")
         dateTimeFormat2 = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.US)
-        dateTimeFormat2.timeZone = TimeZone.getTimeZone("GMT+00")
+        dateTimeFormat2.timeZone = TimeZone.getTimeZone("UTC")
     }
 
     override fun fromJson(reader: JsonReader): Date? {
