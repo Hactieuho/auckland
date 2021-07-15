@@ -1,19 +1,11 @@
 package com.liz.auckland.ui.main
 
-import android.content.Intent
 import android.os.Bundle
-import android.provider.AlarmClock
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
-import com.blankj.utilcode.util.ToastUtils
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
 import com.liz.auckland.R
 import com.liz.auckland.app.MainApplication
 import com.liz.auckland.data.RubbishRepository
@@ -21,8 +13,8 @@ import com.liz.auckland.databinding.ActivityMainBinding
 import com.liz.auckland.model.MainPagerAdapter
 import com.liz.auckland.resource.Resource
 import com.liz.auckland.util.KEY
-import java.util.*
-
+import com.liz.auckland.util.handleError
+import com.liz.auckland.util.onChooseTime
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -103,26 +95,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
         viewModel.rubbishAn.observe(this, {})
-        RubbishRepository.instant.getTownCitiesResult.observe(this) {
-            if (it is Resource.Error) {
-                ToastUtils.showShort(it.message)
-            }
-        }
-        RubbishRepository.instant.getSuburbLocalitiesResult.observe(this) {
-            if (it is Resource.Error) {
-                ToastUtils.showShort(it.message)
-            }
-        }
-        RubbishRepository.instant.getRoadNamesResult.observe(this) {
-            if (it is Resource.Error) {
-                ToastUtils.showShort(it.message)
-            }
-        }
-        RubbishRepository.instant.getAddressNumbersResult.observe(this) {
-            if (it is Resource.Error) {
-                ToastUtils.showShort(it.message)
-            }
-        }
+
+        handleError(RubbishRepository.instant.getTownCitiesResult)
+        handleError(RubbishRepository.instant.getSuburbLocalitiesResult)
+        handleError(RubbishRepository.instant.getRoadNamesResult)
+        handleError(RubbishRepository.instant.getAddressNumbersResult)
+
         viewModel.addAlarm.observe(this) {
             if (!it.isNullOrEmpty()) {
                 val date = when (it) {
@@ -135,59 +113,9 @@ class MainActivity : AppCompatActivity() {
                     KEY.HOUSEHOLD_RECYCLING_FROM -> "Household recycling"
                     else -> ""
                 }
-                onChooseTime(date, title)
+                onChooseTime(date, title, this)
                 viewModel.addAlarm.postValue(null)
             }
         }
-    }
-
-    // Chon thoi diem bao thuc (ngay, gio)
-    fun onChooseTime(date: Date?, title: String?) {
-        // Chon ngay
-        val datePicker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText("Choose a day")
-            .setSelection(date?.time)
-            .build()
-        datePicker.addOnPositiveButtonClickListener { selection: Long? ->
-            // Chon gio
-            val c = Calendar.getInstance()
-            date?.time?.let { c.timeInMillis = it - c.timeZone.rawOffset }
-            val timePicker = MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
-                .setHour(c[Calendar.HOUR_OF_DAY])
-                .setMinute(c[Calendar.MINUTE])
-                .setTitleText("Choose a time")
-                .build()
-            timePicker.show(
-                supportFragmentManager,
-                MainActivity::class.java.simpleName
-            )
-            timePicker.addOnPositiveButtonClickListener { v: View? ->
-                val calendar = Calendar.getInstance()
-                selection?.let { calendar.timeInMillis = it }
-                calendar[Calendar.HOUR_OF_DAY] = timePicker.hour
-                calendar[Calendar.MINUTE] = timePicker.minute
-                createAlarm(calendar.time, title)
-            }
-        }
-        datePicker.show(
-            supportFragmentManager,
-            MainActivity::class.java.simpleName
-        )
-    }
-
-    fun createAlarm(date: Date?, title: String?) {
-        val i = Intent(AlarmClock.ACTION_SET_ALARM)
-        val calendar = Calendar.getInstance()
-        date?.let { calendar.time = it }
-        val extraDays = arrayListOf(calendar.get(Calendar.DAY_OF_WEEK))
-        val extraHours = calendar.get(Calendar.HOUR_OF_DAY)
-        val extraMinutes = calendar.get(Calendar.MINUTE)
-        i.putExtra(AlarmClock.EXTRA_MESSAGE, title)
-        i.putExtra(AlarmClock.EXTRA_DAYS, extraDays)
-        i.putExtra(AlarmClock.EXTRA_HOUR, extraHours)
-        i.putExtra(AlarmClock.EXTRA_MINUTES, extraMinutes)
-        i.putExtra(AlarmClock.EXTRA_SKIP_UI, false)
-        startActivity(i)
     }
 }

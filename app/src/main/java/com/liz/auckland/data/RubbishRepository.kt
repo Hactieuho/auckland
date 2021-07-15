@@ -10,6 +10,7 @@ import com.liz.auckland.resource.Resource
 import kotlinx.coroutines.*
 import retrofit2.await
 import java.lang.Exception
+import java.lang.IndexOutOfBoundsException
 
 class RubbishRepository {
 

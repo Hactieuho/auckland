@@ -43,18 +43,9 @@ class MainApplication : Application() {
         savedData = s
         getSharedPreferences(getSharePreFileName(), 0).saveItem(KEY.SAVED_DATA, s)
     }
-    inline fun <reified T> getFromSharedPre(key: String): T? {
+    private inline fun <reified T> getFromSharedPre(key: String): T? {
         return getSharedPreferences(getSharePreFileName(), 0).getItem(key)
     }
-    fun getListFromSharedPre(key: String): ArrayList<Address>? {
-        return getSharedPreferences(getSharePreFileName(), 0).getList(key)
-    }
-    fun containSharePre(key: String): Boolean {
-        return getSharedPreferences(getSharePreFileName(), 0).contains(
-            key
-        )
-    }
-    inline fun <reified T> checkType(obj: Any?, contract: T) =  obj is T
 
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
@@ -70,7 +61,7 @@ class MainApplication : Application() {
         }
     }
 
-    fun getSharePreFileName(): String {
+    private fun getSharePreFileName(): String {
         return BuildConfig.APPLICATION_ID
     }
 
