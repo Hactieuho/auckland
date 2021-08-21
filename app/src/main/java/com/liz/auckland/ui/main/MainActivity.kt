@@ -16,12 +16,13 @@ import com.liz.auckland.util.KEY
 import com.liz.auckland.util.handleError
 import com.liz.auckland.util.onChooseTime
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     val viewModel: MainViewModel by viewModels()
-    private lateinit var adapter: MainPagerAdapter
+    @Inject lateinit var adapter: MainPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +34,6 @@ class MainActivity : AppCompatActivity() {
     private fun initUI() {
         // Lay danh sach town city
         viewModel.getTownCities()
-        adapter = MainPagerAdapter(this)
         binding.viewpager.adapter = adapter
         TabLayoutMediator(binding.tabLayout, binding.viewpager) { tab, position ->
             tab.text = when(position) {

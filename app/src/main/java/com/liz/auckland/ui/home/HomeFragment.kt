@@ -59,8 +59,5 @@ class HomeFragment : Fragment() {
     companion object {
         // Singleton
         val instance = HomeFragment()
-        var key = "a"
-        val name = "2errt"
-        const val PUBLIC_NAME = "2errt"
     }
 }
