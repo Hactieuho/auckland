@@ -5,6 +5,8 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+
 }
 
 android {
@@ -76,6 +78,11 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutine"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutine"
     implementation 'com.blankj:utilcodex:1.30.6'
+
+    // Hilt dependencies
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
 
     implementation "androidx.viewpager2:viewpager2:1.0.0"
 }

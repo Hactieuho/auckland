@@ -13,7 +13,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.liz.auckland.databinding.FragmentHomeBinding
 import com.liz.auckland.ui.main.MainViewModel
 import com.liz.auckland.util.showList
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
     val viewModel: MainViewModel by activityViewModels()

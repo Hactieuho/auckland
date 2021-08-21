@@ -15,7 +15,9 @@ import com.liz.auckland.resource.Resource
 import com.liz.auckland.util.KEY
 import com.liz.auckland.util.handleError
 import com.liz.auckland.util.onChooseTime
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     val viewModel: MainViewModel by viewModels()

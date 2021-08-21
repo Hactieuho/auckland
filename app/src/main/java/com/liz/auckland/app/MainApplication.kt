@@ -12,9 +12,11 @@ import com.liz.auckland.util.KEY
 import com.liz.auckland.util.getItem
 import com.liz.auckland.util.getList
 import com.liz.auckland.util.saveItem
+import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import java.lang.Exception
 
+@HiltAndroidApp
 class MainApplication : Application() {
 
     // Danh sach du lieu da luu
