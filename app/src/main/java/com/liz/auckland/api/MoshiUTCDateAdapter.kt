@@ -6,9 +6,8 @@ import com.squareup.moshi.JsonWriter
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
-class MoshiUTCDateAdapter @Inject constructor() : JsonAdapter<Date>() {
+class MoshiUTCDateAdapter : JsonAdapter<Date>() {
     private val dateTimeFormat1: DateFormat
     private val dateTimeFormat2: DateFormat
 

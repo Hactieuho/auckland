@@ -35,7 +35,7 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideMoshi() =
+    fun provideMoshi(): Moshi =
         Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .add(Date::class.java, MoshiUTCDateAdapter())
@@ -43,13 +43,11 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClientBuilder(logging: HttpLoggingInterceptor) : OkHttpClient.Builder {
+    fun provideOkHttpClientBuilder() : OkHttpClient.Builder {
+        val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
         val httpClient = OkHttpClient.Builder()
         httpClient.addInterceptor(logging)
         return httpClient
     }
-
-    @Provides
-    fun provideLogging() : HttpLoggingInterceptor = HttpLoggingInterceptor()
 }
