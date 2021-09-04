@@ -72,6 +72,7 @@ dependencies {
     def version_moshi = '1.11.0'
     implementation "com.squareup.moshi:moshi:$version_moshi"
     implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
 
     // Coroutine
     def version_coroutine = '1.4.1'
@@ -82,7 +83,6 @@ dependencies {
     // Hilt dependencies
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-
 
     implementation "androidx.viewpager2:viewpager2:1.0.0"
 }

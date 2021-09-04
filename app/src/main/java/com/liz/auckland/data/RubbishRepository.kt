@@ -2,17 +2,21 @@ package com.liz.auckland.data
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.liz.auckland.api.RubbishApi
+import com.liz.auckland.api.RubbishService
 import com.liz.auckland.app.MainApplication
-import com.liz.auckland.util.KEY
 import com.liz.auckland.model.Rubbish
 import com.liz.auckland.resource.Resource
-import kotlinx.coroutines.*
+import com.liz.auckland.util.KEY
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.await
-import java.lang.Exception
-import java.lang.IndexOutOfBoundsException
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class RubbishRepository {
+@Singleton
+class RubbishRepository @Inject constructor(var rubbishService: RubbishService) {
 
     // Lay danh sach town city
     val getTownCitiesResult = MutableLiveData<Resource<List<String?>?>>()
@@ -65,7 +69,7 @@ class RubbishRepository {
         getTownCitiesResult.postValue(Resource.Loading("Getting town city list", getTownCitiesResult.value?.data))
         ioScope.launch {
             try {
-                val result = RubbishApi.api.getTownCities()?.await()
+                val result = rubbishService.getTownCities()?.await()
                 if (!result.isNullOrEmpty()) {
                     // Luu lai danh sach town city
                     getTownCitiesResult.postValue(Resource.Success(result.filter { s -> !s.isNullOrEmpty() && !s.contentEquals("town_city") }))
@@ -89,7 +93,7 @@ class RubbishRepository {
         getSuburbLocalitiesResult.postValue(Resource.Loading("Getting suburb locality list", getSuburbLocalitiesResult.value?.data))
         ioScope.launch {
             try {
-                val result = RubbishApi.api.getSuburbLocalities(currentTownCity.value)?.await()
+                val result = rubbishService.getSuburbLocalities(currentTownCity.value)?.await()
                 if (!result.isNullOrEmpty()) {
                     // Luu lai danh sach suburb locality
                     getSuburbLocalitiesResult.postValue(Resource.Success(result.filter { s -> !s.isNullOrEmpty() }))
@@ -113,7 +117,7 @@ class RubbishRepository {
         getRoadNamesResult.postValue(Resource.Loading("Getting road name list", getRoadNamesResult.value?.data))
         ioScope.launch {
             try {
-                val result = RubbishApi.api.getRoadNames(currentSuburbLocality.value)?.await()
+                val result = rubbishService.getRoadNames(currentSuburbLocality.value)?.await()
                 if (!result.isNullOrEmpty()) {
                     // Luu lai danh sach road name
                     getRoadNamesResult.postValue(Resource.Success(result.filter { s -> !s.isNullOrEmpty() }))
@@ -137,7 +141,7 @@ class RubbishRepository {
         getAddressNumbersResult.postValue(Resource.Loading("Getting address number list", getAddressNumbersResult.value?.data))
         ioScope.launch {
             try {
-                val result = RubbishApi.api.getAddressNumbers(currentSuburbLocality.value, currentRoadName.value)?.await()
+                val result = rubbishService.getAddressNumbers(currentSuburbLocality.value, currentRoadName.value)?.await()
                 if (!result.isNullOrEmpty()) {
                     // Luu lai danh sach road name
                     getAddressNumbersResult.postValue(Resource.Success(result.filter { s -> !s.isNullOrEmpty() }))
@@ -161,7 +165,7 @@ class RubbishRepository {
         getRubbishInfoResult.postValue(Resource.Loading("Getting rubbish info", getRubbishInfoResult.value?.data))
         ioScope.launch {
             try {
-                val result = RubbishApi.api.getRubbish(an)?.await()
+                val result = rubbishService.getRubbish(an)?.await()
                 if (result != null) {
                     // Luu lai rubbish info
                     getRubbishInfoResult.postValue(Resource.Success(result))
@@ -173,9 +177,5 @@ class RubbishRepository {
                 getRubbishInfoResult.postValue(Resource.Error("Getting rubbish info error: ${e.message}", getRubbishInfoResult.value?.data))
             }
         }
-    }
-
-    companion object {
-        val instant = RubbishRepository()
     }
 }

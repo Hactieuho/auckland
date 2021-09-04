@@ -9,18 +9,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.*
+import okhttp3.OkHttpClient
 
-private const val BASE_URL = "http://sinno.soict.ai:11080/"
-private val moshi = Moshi.Builder()
-    .add(KotlinJsonAdapterFactory())
-    .add(Date::class.java, MoshiUTCDateAdapter())
-    .build()
-
-private val retrofit = Retrofit.Builder()
-    .baseUrl(BASE_URL)
-    .addConverterFactory(MoshiConverterFactory.create(moshi))
-    .addConverterFactory(NullOnEmptyConverterFactory())
-    .build()
+import okhttp3.logging.HttpLoggingInterceptor
 
 interface RubbishService {
     @GET("town_citys")
@@ -33,10 +24,4 @@ interface RubbishService {
     fun getAddressNumbers(@Query("suburb_locality") locality: String?, @Query("full_road_name") roadName: String?) : Call<List<String?>?>?
     @GET("rubbish")
     fun getRubbish(@Query("an") an: String?) : Call<Rubbish?>?
-}
-
-object RubbishApi {
-    val api: RubbishService by lazy {
-        retrofit.create(RubbishService::class.java)
-    }
 }

@@ -22,7 +22,10 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     val viewModel: MainViewModel by viewModels()
-    @Inject lateinit var adapter: MainPagerAdapter
+    @Inject
+    lateinit var adapter: MainPagerAdapter
+    @Inject
+    lateinit var rubbishRepository: RubbishRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         viewModel.currentTownCity.observe(this) {
             // Reset suburb locality
-            RubbishRepository.instant.getSuburbLocalitiesResult.postValue(Resource.Success(null))
+            rubbishRepository.getSuburbLocalitiesResult.postValue(Resource.Success(null))
             viewModel.currentSuburbLocality.postValue(null)
             // Lay danh sach suburb locality khi chon 1 town city
             if (!it.isNullOrEmpty()) {
@@ -66,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         }
         viewModel.currentSuburbLocality.observe(this) {
             // Reset road name
-            RubbishRepository.instant.getRoadNamesResult.postValue(Resource.Success(null))
+            rubbishRepository.getRoadNamesResult.postValue(Resource.Success(null))
             viewModel.currentRoadName.postValue(null)
             // Lay danh sach road name khi chon 1 town city
             if (!it.isNullOrEmpty()) {
@@ -77,7 +80,7 @@ class MainActivity : AppCompatActivity() {
         }
         viewModel.currentRoadName.observe(this) {
             // Reset address number
-            RubbishRepository.instant.getAddressNumbersResult.postValue(Resource.Success(null))
+            rubbishRepository.getAddressNumbersResult.postValue(Resource.Success(null))
             viewModel.currentAddressNumber.postValue(null)
             // Lay danh sach address number khi chon 1 road name
             if (!it.isNullOrEmpty()) {
@@ -98,10 +101,10 @@ class MainActivity : AppCompatActivity() {
         }
         viewModel.rubbishAn.observe(this, {})
 
-        handleError(RubbishRepository.instant.getTownCitiesResult)
-        handleError(RubbishRepository.instant.getSuburbLocalitiesResult)
-        handleError(RubbishRepository.instant.getRoadNamesResult)
-        handleError(RubbishRepository.instant.getAddressNumbersResult)
+        handleError(rubbishRepository.getTownCitiesResult)
+        handleError(rubbishRepository.getSuburbLocalitiesResult)
+        handleError(rubbishRepository.getRoadNamesResult)
+        handleError(rubbishRepository.getAddressNumbersResult)
 
         viewModel.addAlarm.observe(this) {
             if (!it.isNullOrEmpty()) {
