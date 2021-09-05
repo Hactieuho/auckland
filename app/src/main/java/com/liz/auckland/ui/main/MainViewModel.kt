@@ -1,11 +1,11 @@
 package com.liz.auckland.ui.main
 
-import android.view.View
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.liz.auckland.data.RubbishRepository
 import com.liz.auckland.di.*
 import com.liz.auckland.di.main.*
-import com.liz.auckland.resource.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
