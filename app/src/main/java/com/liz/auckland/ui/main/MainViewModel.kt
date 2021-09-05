@@ -1,83 +1,43 @@
 package com.liz.auckland.ui.main
 
 import android.view.View
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.liz.auckland.data.RubbishRepository
+import com.liz.auckland.di.*
+import com.liz.auckland.di.main.*
 import com.liz.auckland.resource.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    val rubbishRepository: RubbishRepository
-) : ViewModel() {
+    private val rubbishRepository: RubbishRepository,
     // Town city hien tai
-    val currentTownCity = rubbishRepository.currentTownCity
+    @CurrentTownCity val currentTownCity: MutableLiveData<String?>,
     // Suburb locality hien tai
-    val currentSuburbLocality = rubbishRepository.currentSuburbLocality
+    @CurrentSuburbLocality val currentSuburbLocality: MutableLiveData<String?>,
     // Road name hien tai
-    val currentRoadName = rubbishRepository.currentRoadName
+    @CurrentRoadName val currentRoadName: MutableLiveData<String?>,
     // Address number hien tai
-    val currentAddressNumber = rubbishRepository.currentAddressNumber
+    @CurrentAddressNumber val currentAddressNumber: MutableLiveData<String?>,
+    // Dia chi lay rubbish
+    @RubbishAn val rubbishAn: LiveData<String>?,
+    // An hien suburb locality
+    @SuburbLocalityVisibility val suburbLocalityVisibility: LiveData<Int>,
+    // An hien road name
+    @RoadNameVisibility val roadNameVisibility: LiveData<Int>,
+    // An hien address number
+    @AddressNumberVisibility val addressNumberVisibility: LiveData<Int>,
+    // An hien rubbish info
+    @RubbishInfoVisibility val rubbishInfoVisibility: LiveData<Int>,
+    // An hien alarms
+    @AlarmEnabled val alarmEnabled: LiveData<Boolean>
+) : ViewModel() {
     // Thong tin rubbish
     val getRubbishInfoResult = rubbishRepository.getRubbishInfoResult
     // Them alarm
     val addAlarm = MutableLiveData<String?>(null)
 
-    // An hien suburb locality
-    val suburbLocalityVisibility = Transformations.switchMap(rubbishRepository.getTownCitiesResult) { cities ->
-        Transformations.switchMap(currentTownCity) { city ->
-            Transformations.map(rubbishRepository.getSuburbLocalitiesResult) { localities ->
-                if (cities is Resource.Success && !city.isNullOrEmpty() && localities is Resource.Success) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-            }
-        }
-    }
-    // An hien road name
-    val roadNameVisibility = Transformations.switchMap(suburbLocalityVisibility) { localityVisible ->
-        Transformations.switchMap(currentSuburbLocality) { locality ->
-            Transformations.map(rubbishRepository.getRoadNamesResult) { roads ->
-                if (localityVisible == View.VISIBLE && !locality.isNullOrEmpty() && roads is Resource.Success) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-            }
-        }
-    }
-    // An hien address number
-    val addressNumberVisibility = Transformations.switchMap(roadNameVisibility) { roadVisible ->
-        Transformations.switchMap(currentRoadName) { road ->
-            Transformations.map(rubbishRepository.getAddressNumbersResult) { addresses ->
-                if (roadVisible == View.VISIBLE && !road.isNullOrEmpty() && addresses is Resource.Success) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-            }
-        }
-    }
-    // An hien rubbish info
-    val rubbishInfoVisibility = Transformations.switchMap(addressNumberVisibility) { addressVisible ->
-        Transformations.switchMap(getRubbishInfoResult) { rubbish ->
-            Transformations.map(currentAddressNumber) { address ->
-                if (addressVisible == View.VISIBLE && rubbish is Resource.Success && !address.isNullOrEmpty()) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-            }
-        }
-    }
-
-    // Dia chi lay rubbish
-    val rubbishAn = rubbishRepository.rubbishAn
     // An hien dia chi lay rubbish
     val rubbishVisibility = Transformations.switchMap(currentTownCity) { city ->
         Transformations.switchMap(currentSuburbLocality) { locality ->
@@ -132,16 +92,7 @@ class MainViewModel @Inject constructor(
 
     // Lay thong tin rubbish
     fun getRubbishInfo() {
-        rubbishRepository.getRubbish(rubbishAn.value)
-    }
-
-    // An hien alarms
-    val alarmEnabled = Transformations.switchMap(addressNumberVisibility) { addressVisible ->
-        Transformations.switchMap(getRubbishInfoResult) { rubbish ->
-            Transformations.map(currentAddressNumber) { address ->
-                addressVisible == View.VISIBLE && rubbish is Resource.Success && !address.isNullOrEmpty()
-            }
-        }
+        rubbishRepository.getRubbish()
     }
 
     val alarm: (String?)->Unit = { addAlarm.postValue(it) }

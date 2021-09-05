@@ -99,7 +99,6 @@ class MainActivity : AppCompatActivity() {
                 MainApplication.instant.saveToSharePre(KEY.CURRENT_ADDRESS_NUMBER, it)
             }
         }
-        viewModel.rubbishAn.observe(this, {})
 
         handleError(rubbishRepository.getTownCitiesResult)
         handleError(rubbishRepository.getSuburbLocalitiesResult)

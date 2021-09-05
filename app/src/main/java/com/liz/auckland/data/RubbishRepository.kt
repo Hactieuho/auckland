@@ -1,9 +1,11 @@
 package com.liz.auckland.data
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.liz.auckland.api.RubbishService
 import com.liz.auckland.app.MainApplication
+import com.liz.auckland.di.*
 import com.liz.auckland.model.Rubbish
 import com.liz.auckland.resource.Resource
 import com.liz.auckland.util.KEY
@@ -16,39 +18,33 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RubbishRepository @Inject constructor(var rubbishService: RubbishService) {
-
+class RubbishRepository @Inject constructor(
+    private val rubbishService: RubbishService,
+    // Town city hien tai
+    @CurrentTownCity val currentTownCity: MutableLiveData<String?>,
+    // Suburb locality hien tai
+    @CurrentSuburbLocality val currentSuburbLocality: MutableLiveData<String?>,
+    // Road name hien tai
+    @CurrentRoadName val currentRoadName: MutableLiveData<String?>,
+    // So nha hien tai
+    @CurrentAddressNumber val currentAddressNumber: MutableLiveData<String?>,
+    // Dia chi lay rubbish
+    @RubbishAn val rubbishAn: LiveData<String>?
+) {
     // Lay danh sach town city
     val getTownCitiesResult = MutableLiveData<Resource<List<String?>?>>()
-    // Town city hien tai
-    val currentTownCity = MutableLiveData<String?>(null)
 
     // Lay danh sach suburb locality
     val getSuburbLocalitiesResult = MutableLiveData<Resource<List<String?>?>>()
-    // Suburb locality hien tai
-    val currentSuburbLocality = MutableLiveData<String?>(null)
 
     // Lay danh sach road name
     val getRoadNamesResult = MutableLiveData<Resource<List<String?>?>>()
-    // Road name hien tai
-    val currentRoadName = MutableLiveData<String?>(null)
 
     // Lay danh sach so nha
     val getAddressNumbersResult = MutableLiveData<Resource<List<String?>?>>()
-    // So nha hien tai
-    val currentAddressNumber = MutableLiveData<String?>(null)
 
     // Lay thong tin rubbish
     val getRubbishInfoResult = MutableLiveData<Resource<Rubbish?>>()
-
-    // Dia chi lay rubbish
-    val rubbishAn = Transformations.switchMap(currentSuburbLocality) { locality ->
-        Transformations.switchMap(currentRoadName) { road ->
-            Transformations.map(currentAddressNumber) { address ->
-                "$address $road, $locality"
-            }
-        }
-    }
 
     val job = Job()
     val ioScope = CoroutineScope(Dispatchers.IO + job)
@@ -161,11 +157,11 @@ class RubbishRepository @Inject constructor(var rubbishService: RubbishService) 
     }
 
     // Lay thong tin rubbish
-    fun getRubbish(an: String?) {
+    fun getRubbish() {
         getRubbishInfoResult.postValue(Resource.Loading("Getting rubbish info", getRubbishInfoResult.value?.data))
         ioScope.launch {
             try {
-                val result = rubbishService.getRubbish(an)?.await()
+                val result = rubbishService.getRubbish(rubbishAn?.value)?.await()
                 if (result != null) {
                     // Luu lai rubbish info
                     getRubbishInfoResult.postValue(Resource.Success(result))
