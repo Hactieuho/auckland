@@ -4,6 +4,7 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.liz.auckland.data.RubbishRepository
+import com.liz.auckland.di.CurrentTownCity
 import com.liz.auckland.resource.Resource
 import dagger.Module
 import dagger.Provides
@@ -39,6 +40,20 @@ annotation class AddressNumberVisibility
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class RubbishInfoVisibility
+
+/**
+ * An hien dia chi lay rubbish
+ */
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class RubbishVisibility
+
+/**
+ * An hien loading
+ */
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class LoadingVisibility
 
 /**
  * An hien alarms
@@ -122,6 +137,46 @@ object MainData {
         }
     }
 
+    @RubbishVisibility
+    @ViewModelScoped
+    @Provides
+    fun provideRubbishVisibility(
+        rubbishRepository: RubbishRepository
+    ): LiveData<Int> = Transformations.switchMap(rubbishRepository.currentTownCity) { city ->
+        Transformations.switchMap(rubbishRepository.currentSuburbLocality) { locality ->
+            Transformations.switchMap(rubbishRepository.currentRoadName) { road ->
+                Transformations.map(rubbishRepository.currentAddressNumber) { address ->
+                    if (city.isNullOrEmpty() || locality.isNullOrEmpty() || road.isNullOrEmpty() || address.isNullOrEmpty()) {
+                        View.GONE
+                    } else {
+                        View.VISIBLE
+                    }
+                }
+            }
+        }
+    }
+
+    @LoadingVisibility
+    @ViewModelScoped
+    @Provides
+    fun provideLoadingVisibility(
+        rubbishRepository: RubbishRepository
+    ): LiveData<Int> = Transformations.switchMap(rubbishRepository.getTownCitiesResult) { cities ->
+        Transformations.switchMap(rubbishRepository.getSuburbLocalitiesResult) { localities ->
+            Transformations.switchMap(rubbishRepository.getRoadNamesResult) { roads ->
+                Transformations.switchMap(rubbishRepository.getAddressNumbersResult) { addresses ->
+                    Transformations.map(rubbishRepository.getRubbishInfoResult) { rubish ->
+                        if (cities.isLoading() || localities.isLoading() || roads.isLoading() || addresses.isLoading() || rubish.isLoading()) {
+                            View.VISIBLE
+                        } else {
+                            View.GONE
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @AlarmEnabled
     @ViewModelScoped
     @Provides
@@ -135,4 +190,5 @@ object MainData {
             }
         }
     }
+
 }

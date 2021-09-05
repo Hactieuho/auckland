@@ -30,6 +30,10 @@ class MainViewModel @Inject constructor(
     @AddressNumberVisibility val addressNumberVisibility: LiveData<Int>,
     // An hien rubbish info
     @RubbishInfoVisibility val rubbishInfoVisibility: LiveData<Int>,
+    // An hien dia chi lay rubbish
+    @RubbishVisibility val rubbishVisibility: LiveData<Int>,
+    // An hien loading
+    @LoadingVisibility val loadingVisibility: LiveData<Int>,
     // An hien alarms
     @AlarmEnabled val alarmEnabled: LiveData<Boolean>
 ) : ViewModel() {
@@ -37,38 +41,6 @@ class MainViewModel @Inject constructor(
     val getRubbishInfoResult = rubbishRepository.getRubbishInfoResult
     // Them alarm
     val addAlarm = MutableLiveData<String?>(null)
-
-    // An hien dia chi lay rubbish
-    val rubbishVisibility = Transformations.switchMap(currentTownCity) { city ->
-        Transformations.switchMap(currentSuburbLocality) { locality ->
-            Transformations.switchMap(currentRoadName) { road ->
-                Transformations.map(currentAddressNumber) { address ->
-                    if (city.isNullOrEmpty() || locality.isNullOrEmpty() || road.isNullOrEmpty() || address.isNullOrEmpty()) {
-                        View.GONE
-                    } else {
-                        View.VISIBLE
-                    }
-                }
-            }
-        }
-    }
-
-    // An hien loading
-    val loadingVisibility = Transformations.switchMap(rubbishRepository.getTownCitiesResult) { cities ->
-        Transformations.switchMap(rubbishRepository.getSuburbLocalitiesResult) { localities ->
-            Transformations.switchMap(rubbishRepository.getRoadNamesResult) { roads ->
-                Transformations.switchMap(rubbishRepository.getAddressNumbersResult) { addresses ->
-                    Transformations.map(rubbishRepository.getRubbishInfoResult) { rubish ->
-                        if (cities.isLoading() || localities.isLoading() || roads.isLoading() || addresses.isLoading() || rubish.isLoading()) {
-                            View.VISIBLE
-                        } else {
-                            View.GONE
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     // Lay danh sach town city
     fun getTownCities() {
