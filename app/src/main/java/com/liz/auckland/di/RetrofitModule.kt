@@ -14,18 +14,23 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.*
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
-const val BASE_URL = "http://sinno.soict.ai:11080/"
+@Qualifier
+annotation class BaseUrl
 
 @InstallIn(SingletonComponent::class)
 @Module
 object RetrofitModule {
     @Provides
     @Singleton
-    fun provideRubbishService(moshi: Moshi, httpClient: OkHttpClient.Builder) : RubbishService {
+    fun provideRubbishService(
+        @BaseUrl baseUrl: String,
+        moshi: Moshi,
+        httpClient: OkHttpClient.Builder) : RubbishService {
         val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrl)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addConverterFactory(NullOnEmptyConverterFactory())
             .client(httpClient.build())
@@ -50,4 +55,9 @@ object RetrofitModule {
         httpClient.addInterceptor(logging)
         return httpClient
     }
+
+    @BaseUrl
+    @Provides
+    @Singleton
+    fun provideBaseUrl(): String = "http://sinno.soict.ai:11080/"
 }
