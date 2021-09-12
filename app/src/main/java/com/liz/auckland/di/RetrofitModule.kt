@@ -35,18 +35,6 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideRubbishService2(moshi: Moshi, httpClient: OkHttpClient.Builder) : RubbishService {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .addConverterFactory(NullOnEmptyConverterFactory())
-            .client(httpClient.build())
-            .build()
-        return retrofit.create(RubbishService::class.java)
-    }
-
-    @Provides
-    @Singleton
     fun provideMoshi(): Moshi =
         Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
