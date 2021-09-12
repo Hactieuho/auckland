@@ -53,15 +53,6 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideMoshiUTCDateAdapter(
-        @SimpleDateFormat1 simpleDateFormat1: DateFormat,
-        @SimpleDateFormat2 simpleDateFormat2: DateFormat
-    ) : MoshiUTCDateAdapter {
-        return MoshiUTCDateAdapter(simpleDateFormat1, simpleDateFormat2)
-    }
-
-    @Provides
-    @Singleton
     fun provideOkHttpClientBuilder() : OkHttpClient.Builder {
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
@@ -71,25 +62,25 @@ object RetrofitModule {
     }
 
     @SimpleDateFormat1
-    @Provides
     @Singleton
-    fun provideSimpleDateFormat1(@UTCTimeZone timeZone: TimeZone): SimpleDateFormat {
+    @Provides
+    fun provideSimpleDateFormat1(@UTCTimeZone timeZone: TimeZone): DateFormat {
         val dateFormat = SimpleDateFormat("yyyyMMdd HHmmss", Locale.US)
         dateFormat.timeZone = timeZone
         return dateFormat
     }
 
     @SimpleDateFormat2
-    @Provides
     @Singleton
-    fun provideSimpleDateFormat2(@UTCTimeZone timeZone: TimeZone): SimpleDateFormat {
+    @Provides
+    fun provideSimpleDateFormat2(@UTCTimeZone timeZone: TimeZone): DateFormat {
         val dateFormat = SimpleDateFormat("yyyyMMdd HHmmss", Locale.US)
         dateFormat.timeZone = timeZone
         return dateFormat
     }
 
-    @Provides
-    @Singleton
     @UTCTimeZone
+    @Singleton
+    @Provides
     fun provideUTCTimeZone(): TimeZone = TimeZone.getTimeZone("UTC")
 }
