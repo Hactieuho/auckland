@@ -13,20 +13,10 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
 const val BASE_URL = "http://sinno.soict.ai:11080/"
-
-@Qualifier
-annotation class SimpleDateFormat1
-@Qualifier
-annotation class SimpleDateFormat2
-@Qualifier
-annotation class UTCTimeZone
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -60,27 +50,4 @@ object RetrofitModule {
         httpClient.addInterceptor(logging)
         return httpClient
     }
-
-    @SimpleDateFormat1
-    @Singleton
-    @Provides
-    fun provideSimpleDateFormat1(@UTCTimeZone timeZone: TimeZone): DateFormat {
-        val dateFormat = SimpleDateFormat("yyyyMMdd HHmmss", Locale.US)
-        dateFormat.timeZone = timeZone
-        return dateFormat
-    }
-
-    @SimpleDateFormat2
-    @Singleton
-    @Provides
-    fun provideSimpleDateFormat2(@UTCTimeZone timeZone: TimeZone): DateFormat {
-        val dateFormat = SimpleDateFormat("yyyyMMdd HHmmss", Locale.US)
-        dateFormat.timeZone = timeZone
-        return dateFormat
-    }
-
-    @UTCTimeZone
-    @Singleton
-    @Provides
-    fun provideUTCTimeZone(): TimeZone = TimeZone.getTimeZone("UTC")
 }
