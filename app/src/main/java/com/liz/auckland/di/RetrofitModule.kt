@@ -13,10 +13,20 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 const val BASE_URL = "http://sinno.soict.ai:11080/"
+
+@Qualifier
+annotation class SimpleDateFormat1
+@Qualifier
+annotation class SimpleDateFormat2
+@Qualifier
+annotation class UTCTimeZone
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -35,11 +45,20 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideMoshi(): Moshi =
+    fun provideMoshi(moshiUTCDateAdapter: MoshiUTCDateAdapter): Moshi =
         Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
-            .add(Date::class.java, MoshiUTCDateAdapter())
+            .add(Date::class.java, moshiUTCDateAdapter)
             .build()
+
+    @Provides
+    @Singleton
+    fun provideMoshiUTCDateAdapter(
+        @SimpleDateFormat1 simpleDateFormat1: DateFormat,
+        @SimpleDateFormat2 simpleDateFormat2: DateFormat
+    ) : MoshiUTCDateAdapter {
+        return MoshiUTCDateAdapter(simpleDateFormat1, simpleDateFormat2)
+    }
 
     @Provides
     @Singleton
@@ -50,4 +69,27 @@ object RetrofitModule {
         httpClient.addInterceptor(logging)
         return httpClient
     }
+
+    @SimpleDateFormat1
+    @Provides
+    @Singleton
+    fun provideSimpleDateFormat1(@UTCTimeZone timeZone: TimeZone): SimpleDateFormat {
+        val dateFormat = SimpleDateFormat("yyyyMMdd HHmmss", Locale.US)
+        dateFormat.timeZone = timeZone
+        return dateFormat
+    }
+
+    @SimpleDateFormat2
+    @Provides
+    @Singleton
+    fun provideSimpleDateFormat2(@UTCTimeZone timeZone: TimeZone): SimpleDateFormat {
+        val dateFormat = SimpleDateFormat("yyyyMMdd HHmmss", Locale.US)
+        dateFormat.timeZone = timeZone
+        return dateFormat
+    }
+
+    @Provides
+    @Singleton
+    @UTCTimeZone
+    fun provideUTCTimeZone(): TimeZone = TimeZone.getTimeZone("UTC")
 }

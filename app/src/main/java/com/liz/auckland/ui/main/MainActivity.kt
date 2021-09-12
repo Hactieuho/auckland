@@ -10,7 +10,7 @@ import com.liz.auckland.R
 import com.liz.auckland.app.MainApplication
 import com.liz.auckland.data.RubbishRepository
 import com.liz.auckland.databinding.ActivityMainBinding
-import com.liz.auckland.model.MainPagerAdapter
+import com.liz.auckland.ui.adapter.MainPagerAdapter
 import com.liz.auckland.resource.Resource
 import com.liz.auckland.util.KEY
 import com.liz.auckland.util.handleError

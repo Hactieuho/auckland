@@ -1,22 +1,20 @@
 package com.liz.auckland.api
 
+import com.liz.auckland.di.SimpleDateFormat1
+import com.liz.auckland.di.SimpleDateFormat2
+import com.liz.auckland.di.UTCTimeZone
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonReader
 import com.squareup.moshi.JsonWriter
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class MoshiUTCDateAdapter : JsonAdapter<Date>() {
-    private val dateTimeFormat1: DateFormat
-    private val dateTimeFormat2: DateFormat
-
-    init {
-        dateTimeFormat1 = SimpleDateFormat("yyyyMMdd HHmmss", Locale.US)
-        dateTimeFormat1.timeZone = TimeZone.getTimeZone("UTC")
-        dateTimeFormat2 = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.US)
-        dateTimeFormat2.timeZone = TimeZone.getTimeZone("UTC")
-    }
+class MoshiUTCDateAdapter @Inject constructor(
+    val dateTimeFormat1: DateFormat,
+    val dateTimeFormat2: DateFormat
+) : JsonAdapter<Date>() {
 
     override fun fromJson(reader: JsonReader): Date? {
         val dateAsString = reader.nextString()

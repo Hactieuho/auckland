@@ -1,4 +1,4 @@
-package com.liz.auckland.model
+package com.liz.auckland.ui.adapter
 
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
