@@ -10,7 +10,9 @@ import androidx.core.content.edit
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.ToastUtils
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -72,7 +74,7 @@ fun Button.onClick(check: (String?) -> Unit, key: String?) {
     setOnClickListener { check(key) }
 }
 
-fun <T: Any?> LifecycleOwner.handleError(result: MutableLiveData<Resource<T>>) {
+fun<T: Any?> LifecycleOwner.handleError(result: MutableLiveData<Resource<T>>) {
     result.observe(this) {
         if (it is Resource.Error) {
             ToastUtils.showShort(it.message)

@@ -2,12 +2,12 @@ package com.liz.auckland.model
 
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.liz.auckland.ui.home.HomeFragment
+import com.liz.auckland.ui.home.HomeFragment2
 import javax.inject.Inject
 
-class MainPagerAdapter @Inject constructor (
+class MainPagerAdapter2 @Inject constructor (
     fa: FragmentActivity,
-    private val homeFragment: HomeFragment
+    private val homeFragment: HomeFragment2
 ) : FragmentStateAdapter(fa) {
     override fun getItemCount(): Int = 1
 

@@ -2,9 +2,9 @@ package com.liz.auckland.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.liz.auckland.api.RubbishService
+import androidx.lifecycle.Transformations
+import com.liz.auckland.api.RubbishService2
 import com.liz.auckland.app.MainApplication
-import com.liz.auckland.di.*
 import com.liz.auckland.model.Rubbish
 import com.liz.auckland.resource.Resource
 import com.liz.auckland.util.KEY
@@ -12,24 +12,30 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import retrofit2.await
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RubbishRepository @Inject constructor(
-    private val rubbishService: RubbishService,
-    // Town city hien tai
-    @CurrentTownCity val currentTownCity: MutableLiveData<String?>,
-    // Suburb locality hien tai
-    @CurrentSuburbLocality val currentSuburbLocality: MutableLiveData<String?>,
-    // Road name hien tai
-    @CurrentRoadName val currentRoadName: MutableLiveData<String?>,
-    // So nha hien tai
-    @CurrentAddressNumber val currentAddressNumber: MutableLiveData<String?>,
-    // Dia chi lay rubbish
-    @RubbishAn val rubbishAn: LiveData<String>?
+class RubbishRepository2 @Inject constructor(
+    private val rubbishService: RubbishService2
 ) {
+    // Town city hien tai
+    val currentTownCity: MutableLiveData<String?> = MutableLiveData(null)
+    // Suburb locality hien tai
+    val currentSuburbLocality: MutableLiveData<String?> = MutableLiveData(null)
+    // Road name hien tai
+    val currentRoadName: MutableLiveData<String?> = MutableLiveData(null)
+    // So nha hien tai
+    val currentAddressNumber: MutableLiveData<String?> = MutableLiveData(null)
+    // Dia chi lay rubbish
+    val rubbishAn: LiveData<String>? = Transformations.switchMap(currentSuburbLocality) { locality ->
+        Transformations.switchMap(currentRoadName) { road ->
+            Transformations.map(currentAddressNumber) { address ->
+                "$address $road, $locality"
+            }
+        }
+    }
+
     // Lay danh sach town city
     val getTownCitiesResult = MutableLiveData<Resource<List<String?>?>>()
 
@@ -64,10 +70,10 @@ class RubbishRepository @Inject constructor(
         getTownCitiesResult.postValue(Resource.Loading("Getting town city list", getTownCitiesResult.value?.data))
         ioScope.launch {
             try {
-                val result = rubbishService.getTownCities()?.await()
-                if (!result.isNullOrEmpty()) {
+                val result = rubbishService.getTownCities()
+                if (result.isSuccessful && !result.body().isNullOrEmpty()) {
                     // Luu lai danh sach town city
-                    getTownCitiesResult.postValue(Resource.Success(result.filter { s -> !s.isNullOrEmpty() && !s.contentEquals("town_city") }))
+                    getTownCitiesResult.postValue(Resource.Success(result.body()?.filter { s -> !s.isNullOrEmpty() && !s.contentEquals("town_city") }))
                     // Neu co town city truoc do thi chon
                     if (savedData.containsKey(KEY.CURRENT_TOWN_CITY)) {
                         currentTownCity.postValue(savedData[KEY.CURRENT_TOWN_CITY].toString())
@@ -88,10 +94,10 @@ class RubbishRepository @Inject constructor(
         getSuburbLocalitiesResult.postValue(Resource.Loading("Getting suburb locality list", getSuburbLocalitiesResult.value?.data))
         ioScope.launch {
             try {
-                val result = rubbishService.getSuburbLocalities(currentTownCity.value)?.await()
-                if (!result.isNullOrEmpty()) {
+                val result = rubbishService.getSuburbLocalities(currentTownCity.value)
+                if (result.isSuccessful && !result.body().isNullOrEmpty()) {
                     // Luu lai danh sach suburb locality
-                    getSuburbLocalitiesResult.postValue(Resource.Success(result.filter { s -> !s.isNullOrEmpty() }))
+                    getSuburbLocalitiesResult.postValue(Resource.Success(result.body()?.filter { s -> !s.isNullOrEmpty() }))
                     // Neu co suburb locality truoc do thi chon
                     if (savedData.containsKey(KEY.CURRENT_SUBURB_LOCALITY)) {
                         currentSuburbLocality.postValue(savedData[KEY.CURRENT_SUBURB_LOCALITY].toString())
@@ -112,10 +118,10 @@ class RubbishRepository @Inject constructor(
         getRoadNamesResult.postValue(Resource.Loading("Getting road name list", getRoadNamesResult.value?.data))
         ioScope.launch {
             try {
-                val result = rubbishService.getRoadNames(currentSuburbLocality.value)?.await()
-                if (!result.isNullOrEmpty()) {
+                val result = rubbishService.getRoadNames(currentSuburbLocality.value)
+                if (result.isSuccessful && !result.body().isNullOrEmpty()) {
                     // Luu lai danh sach road name
-                    getRoadNamesResult.postValue(Resource.Success(result.filter { s -> !s.isNullOrEmpty() }))
+                    getRoadNamesResult.postValue(Resource.Success(result.body()?.filter { s -> !s.isNullOrEmpty() }))
                     // Neu co road name truoc do thi chon
                     if (savedData.containsKey(KEY.CURRENT_ROAD_NAME)) {
                         currentRoadName.postValue(savedData[KEY.CURRENT_ROAD_NAME].toString())
@@ -136,10 +142,10 @@ class RubbishRepository @Inject constructor(
         getAddressNumbersResult.postValue(Resource.Loading("Getting address number list", getAddressNumbersResult.value?.data))
         ioScope.launch {
             try {
-                val result = rubbishService.getAddressNumbers(currentSuburbLocality.value, currentRoadName.value)?.await()
-                if (!result.isNullOrEmpty()) {
+                val result = rubbishService.getAddressNumbers(currentSuburbLocality.value, currentRoadName.value)
+                if (result.isSuccessful && !result.body().isNullOrEmpty()) {
                     // Luu lai danh sach road name
-                    getAddressNumbersResult.postValue(Resource.Success(result.filter { s -> !s.isNullOrEmpty() }))
+                    getAddressNumbersResult.postValue(Resource.Success(result.body()?.filter { s -> !s.isNullOrEmpty() }))
                     // Neu co address number truoc do thi chon
                     if (savedData.containsKey(KEY.CURRENT_ADDRESS_NUMBER)) {
                         currentAddressNumber.postValue(savedData[KEY.CURRENT_ADDRESS_NUMBER].toString())
@@ -160,10 +166,10 @@ class RubbishRepository @Inject constructor(
         getRubbishInfoResult.postValue(Resource.Loading("Getting rubbish info", getRubbishInfoResult.value?.data))
         ioScope.launch {
             try {
-                val result = rubbishService.getRubbish(rubbishAn?.value)?.await()
-                if (result != null) {
+                val result = rubbishService.getRubbish(rubbishAn?.value)
+                if (result.isSuccessful && result.body() != null) {
                     // Luu lai rubbish info
-                    getRubbishInfoResult.postValue(Resource.Success(result))
+                    getRubbishInfoResult.postValue(Resource.Success(result.body()))
                 } else {
                     getRubbishInfoResult.postValue(Resource.Error("No rubbish info founds!", getRubbishInfoResult.value?.data))
                 }

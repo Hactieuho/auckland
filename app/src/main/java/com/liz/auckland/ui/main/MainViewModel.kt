@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.liz.auckland.data.RubbishRepository
 import com.liz.auckland.di.*
-import com.liz.auckland.di.main.*
+import com.liz.auckland.ui.main.di.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

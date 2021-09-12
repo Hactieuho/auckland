@@ -1,10 +1,9 @@
-package com.liz.auckland.di.main
+package com.liz.auckland.ui.main.di
 
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.liz.auckland.data.RubbishRepository
-import com.liz.auckland.di.CurrentTownCity
 import com.liz.auckland.resource.Resource
 import dagger.Module
 import dagger.Provides
