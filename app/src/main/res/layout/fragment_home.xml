@@ -34,20 +34,20 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/tv_town_city_list"
                         style="@style/material_edt.disabled"
-                        android:text="@{viewModel.currentTownCity}"
+                        android:text="@{viewModel.rubbishRepository.currentTownCity}"
                         tools:text="asdfa"/>
                 </com.google.android.material.textfield.TextInputLayout>
                 <androidx.appcompat.widget.AppCompatImageView
                     android:src="@drawable/ic_refresh"
                     style="@style/refresh_button"
-                    android:onClick="@{()->viewModel.getTownCities()}"/>
+                    android:onClick="@{()->viewModel.rubbishRepository.getTownCities()}"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:visibility="@{viewModel.suburbLocalityVisibility}">
+                android:visibility="@{viewModel.mainData.suburbLocalityVisibility}">
                 <!--        Danh sach suburb locality-->
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/default_text_input_layout.select"
@@ -56,20 +56,20 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/tv_suburb_localities"
                         style="@style/material_edt.disabled"
-                        android:text="@{viewModel.currentSuburbLocality}"
+                        android:text="@{viewModel.rubbishRepository.currentSuburbLocality}"
                         tools:text="asdfa"/>
                 </com.google.android.material.textfield.TextInputLayout>
                 <androidx.appcompat.widget.AppCompatImageView
                     android:src="@drawable/ic_refresh"
                     style="@style/refresh_button"
-                    android:onClick="@{()->viewModel.getSuburbLocalities()}" />
+                    android:onClick="@{()->viewModel.rubbishRepository.getSuburbLocalities()}" />
             </androidx.appcompat.widget.LinearLayoutCompat>
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:visibility="@{viewModel.roadNameVisibility}">
+                android:visibility="@{viewModel.mainData.roadNameVisibility}">
                 <!--        Danh sach duong-->
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/default_text_input_layout.select"
@@ -78,20 +78,20 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/tv_road_name"
                         style="@style/material_edt.disabled"
-                        android:text="@{viewModel.currentRoadName}"
+                        android:text="@{viewModel.rubbishRepository.currentRoadName}"
                         tools:text="asdfa"/>
                 </com.google.android.material.textfield.TextInputLayout>
                 <androidx.appcompat.widget.AppCompatImageView
                     android:src="@drawable/ic_refresh"
                     style="@style/refresh_button"
-                    android:onClick="@{()->viewModel.getRoadNames()}" />
+                    android:onClick="@{()->viewModel.rubbishRepository.getRoadNames()}" />
             </androidx.appcompat.widget.LinearLayoutCompat>
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:visibility="@{viewModel.addressNumberVisibility}">
+                android:visibility="@{viewModel.mainData.addressNumberVisibility}">
                 <!--        Danh sach so nha-->
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/default_text_input_layout.select"
@@ -100,34 +100,34 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/tv_address_number"
                         style="@style/material_edt.disabled"
-                        android:text="@{viewModel.currentAddressNumber}"
+                        android:text="@{viewModel.rubbishRepository.currentAddressNumber}"
                         tools:text="asdfa"/>
                 </com.google.android.material.textfield.TextInputLayout>
                 <androidx.appcompat.widget.AppCompatImageView
                     android:src="@drawable/ic_refresh"
                     style="@style/refresh_button"
-                    android:onClick="@{()->viewModel.getAddressNumbers()}" />
+                    android:onClick="@{()->viewModel.rubbishRepository.getAddressNumbers()}" />
             </androidx.appcompat.widget.LinearLayoutCompat>
             <!--            Dia chi-->
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_address"
                 style="@style/default_title"
-                android:text="@{viewModel.rubbishAn}"
-                android:visibility="@{viewModel.rubbishVisibility}"
+                android:text="@{viewModel.rubbishRepository.rubbishAn}"
+                android:visibility="@{viewModel.mainData.rubbishVisibility}"
                 android:layout_marginHorizontal="@dimen/sp_normal"
                 tools:text="asdf sdfa, asdf"/>
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:visibility="@{viewModel.loadingVisibility}"
+                android:visibility="@{viewModel.mainData.loadingVisibility}"
                 android:layout_margin="@dimen/sp_normal"
                 android:indeterminate="true" />
             <!--        Rubbish info-->
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="@{viewModel.rubbishVisibility}"
+                android:visibility="@{viewModel.mainData.rubbishVisibility}"
                 android:padding="@dimen/sp_normal"
                 android:orientation="vertical">
                 <!--            Household collection-->
@@ -186,7 +186,7 @@
                             android:text="@{viewModel.getRubbishInfoResult.data.getFirstHNext().fromDateTime()}"
                             app:onClick="@{viewModel.alarm}"
                             app:key="@{KEY.HOUSEHOLD_RUBBISH_FROM}"
-                            android:enabled="@{viewModel.alarmEnabled}"
+                            android:enabled="@{viewModel.mainData.alarmEnabled}"
                             android:layout_width="0dp"
                             tools:text="Saturday, 13 July\n19:00:00"
                             tools:enabled="false"
@@ -259,7 +259,7 @@
                             android:text="@{viewModel.getRubbishInfoResult.data.getSecondHNext().fromDateTime()}"
                             app:onClick="@{viewModel.alarm}"
                             app:key="@{KEY.HOUSEHOLD_RECYCLING_FROM}"
-                            android:enabled="@{viewModel.alarmEnabled}"
+                            android:enabled="@{viewModel.mainData.alarmEnabled}"
                             android:layout_width="0dp"
                             tools:text="Saturday, 13 July\n19:00:00"
                             app:layout_constraintTop_toBottomOf="@id/tv_household_recycling_reminder"

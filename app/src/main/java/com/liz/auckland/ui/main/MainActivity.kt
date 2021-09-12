@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initUI() {
         // Lay danh sach town city
-        viewModel.getTownCities()
+        rubbishRepository.getTownCities()
         binding.viewpager.adapter = adapter
         TabLayoutMediator(binding.tabLayout, binding.viewpager) { tab, position ->
             tab.text = when(position) {
@@ -56,45 +56,45 @@ class MainActivity : AppCompatActivity() {
     private fun observeViewModel() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-        viewModel.currentTownCity.observe(this) {
+        rubbishRepository.currentTownCity.observe(this) {
             // Reset suburb locality
             rubbishRepository.getSuburbLocalitiesResult.postValue(Resource.Success(null))
-            viewModel.currentSuburbLocality.postValue(null)
+            rubbishRepository.currentSuburbLocality.postValue(null)
             // Lay danh sach suburb locality khi chon 1 town city
             if (!it.isNullOrEmpty()) {
-                viewModel.getSuburbLocalities()
+                rubbishRepository.getSuburbLocalities()
                 // Luu lai town city da chon
                 MainApplication.instant.saveToSharePre(KEY.CURRENT_TOWN_CITY, it)
             }
         }
-        viewModel.currentSuburbLocality.observe(this) {
+        rubbishRepository.currentSuburbLocality.observe(this) {
             // Reset road name
             rubbishRepository.getRoadNamesResult.postValue(Resource.Success(null))
-            viewModel.currentRoadName.postValue(null)
+            rubbishRepository.currentRoadName.postValue(null)
             // Lay danh sach road name khi chon 1 town city
             if (!it.isNullOrEmpty()) {
-                viewModel.getRoadNames()
+                rubbishRepository.getRoadNames()
                 // Luu lai suburb locality da chon
                 MainApplication.instant.saveToSharePre(KEY.CURRENT_SUBURB_LOCALITY, it)
             }
         }
-        viewModel.currentRoadName.observe(this) {
+        rubbishRepository.currentRoadName.observe(this) {
             // Reset address number
             rubbishRepository.getAddressNumbersResult.postValue(Resource.Success(null))
-            viewModel.currentAddressNumber.postValue(null)
+            rubbishRepository.currentAddressNumber.postValue(null)
             // Lay danh sach address number khi chon 1 road name
             if (!it.isNullOrEmpty()) {
-                viewModel.getAddressNumbers()
+                rubbishRepository.getAddressNumbers()
                 // Luu lai road name da chon
                 MainApplication.instant.saveToSharePre(KEY.CURRENT_ROAD_NAME, it)
             }
         }
-        viewModel.currentAddressNumber.observe(this) {
+        rubbishRepository.currentAddressNumber.observe(this) {
             // Reset address number
-            viewModel.getRubbishInfoResult.postValue(Resource.Success(null))
+            rubbishRepository.getRubbishInfoResult.postValue(Resource.Success(null))
             // Lay thong tin rubbish khi chon 1 address number
             if (!it.isNullOrEmpty()) {
-                viewModel.getRubbishInfo()
+                rubbishRepository.getRubbish()
                 // Luu lai address number da chon
                 MainApplication.instant.saveToSharePre(KEY.CURRENT_ADDRESS_NUMBER, it)
             }

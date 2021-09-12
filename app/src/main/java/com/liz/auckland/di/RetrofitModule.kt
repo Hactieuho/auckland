@@ -3,7 +3,6 @@ package com.liz.auckland.di
 import com.liz.auckland.api.MoshiUTCDateAdapter
 import com.liz.auckland.api.NullOnEmptyConverterFactory
 import com.liz.auckland.api.RubbishService
-import com.liz.auckland.api.RubbishService2
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -32,18 +31,6 @@ object RetrofitModule {
             .client(httpClient.build())
             .build()
         return retrofit.create(RubbishService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideRubbishService2(moshi: Moshi, httpClient: OkHttpClient.Builder) : RubbishService2 {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .addConverterFactory(NullOnEmptyConverterFactory())
-            .client(httpClient.build())
-            .build()
-        return retrofit.create(RubbishService2::class.java)
     }
 
     @Provides

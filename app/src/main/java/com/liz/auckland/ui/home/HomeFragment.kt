@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.liz.auckland.R
 import com.liz.auckland.data.RubbishRepository
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.liz.auckland.databinding.FragmentHomeBinding
 import com.liz.auckland.ui.main.MainViewModel
 import com.liz.auckland.util.showList
@@ -44,18 +43,18 @@ class HomeFragment @Inject constructor() : Fragment() {
     }
 
     private fun showTownCities() {
-        showList(R.string.choose_an_town_city, rubbishRepository.getTownCitiesResult, viewModel.currentTownCity)
+        showList(R.string.choose_an_town_city, rubbishRepository.getTownCitiesResult, rubbishRepository.currentTownCity)
     }
 
     private fun showSuburbLocalities() {
-        showList(R.string.choose_a_suburb_locality, rubbishRepository.getSuburbLocalitiesResult, viewModel.currentSuburbLocality)
+        showList(R.string.choose_a_suburb_locality, rubbishRepository.getSuburbLocalitiesResult, rubbishRepository.currentSuburbLocality)
     }
 
     private fun showRoadNames() {
-        showList(R.string.choose_a_road_name, rubbishRepository.getRoadNamesResult, viewModel.currentRoadName)
+        showList(R.string.choose_a_road_name, rubbishRepository.getRoadNamesResult, rubbishRepository.currentRoadName)
     }
 
     private fun showAddressNumbers() {
-        showList(R.string.choose_an_address_number, rubbishRepository.getAddressNumbersResult, viewModel.currentAddressNumber)
+        showList(R.string.choose_an_address_number, rubbishRepository.getAddressNumbersResult, rubbishRepository.currentAddressNumber)
     }
 }

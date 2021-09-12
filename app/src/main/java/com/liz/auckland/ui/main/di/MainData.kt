@@ -5,72 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.liz.auckland.data.RubbishRepository
 import com.liz.auckland.resource.Resource
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
-import javax.inject.Qualifier
+import javax.inject.Inject
 
-/**
- * An hien suburb locality
- */
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class SuburbLocalityVisibility
-
-/**
- * An hien road name
- */
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class RoadNameVisibility
-
-/**
- * An hien address number
- */
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class AddressNumberVisibility
-
-/**
- * An hien rubbish info
- */
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class RubbishInfoVisibility
-
-/**
- * An hien dia chi lay rubbish
- */
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class RubbishVisibility
-
-/**
- * An hien loading
- */
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class LoadingVisibility
-
-/**
- * An hien alarms
- */
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class AlarmEnabled
-
-@InstallIn(ViewModelComponent::class)
-@Module
-object MainData {
-
-    @SuburbLocalityVisibility
-    @ViewModelScoped
-    @Provides
-    fun provideSuburbLocalityVisibility(
-        rubbishRepository: RubbishRepository
-    ): LiveData<Int> = Transformations.switchMap(rubbishRepository.getTownCitiesResult) { cities ->
+class MainData @Inject constructor(
+    private val rubbishRepository: RubbishRepository
+) {
+    val suburbLocalityVisibility: LiveData<Int> = Transformations.switchMap(rubbishRepository.getTownCitiesResult) { cities ->
         Transformations.switchMap(rubbishRepository.currentTownCity) { city ->
             Transformations.map(rubbishRepository.getSuburbLocalitiesResult) { localities ->
                 if (cities is Resource.Success && !city.isNullOrEmpty() && localities is Resource.Success) {
@@ -82,13 +22,7 @@ object MainData {
         }
     }
 
-    @RoadNameVisibility
-    @ViewModelScoped
-    @Provides
-    fun provideRoadNameVisibility(
-        @SuburbLocalityVisibility suburbLocalityVisibility: LiveData<Int>,
-        rubbishRepository: RubbishRepository
-    ): LiveData<Int> = Transformations.switchMap(suburbLocalityVisibility) { localityVisible ->
+    val roadNameVisibility: LiveData<Int> = Transformations.switchMap(suburbLocalityVisibility) { localityVisible ->
         Transformations.switchMap(rubbishRepository.currentSuburbLocality) { locality ->
             Transformations.map(rubbishRepository.getRoadNamesResult) { roads ->
                 if (localityVisible == View.VISIBLE && !locality.isNullOrEmpty() && roads is Resource.Success) {
@@ -100,13 +34,7 @@ object MainData {
         }
     }
 
-    @AddressNumberVisibility
-    @ViewModelScoped
-    @Provides
-    fun provideAddressNumberVisibility(
-        @RoadNameVisibility roadNameVisibility: LiveData<Int>,
-        rubbishRepository: RubbishRepository
-    ): LiveData<Int> = Transformations.switchMap(roadNameVisibility) { roadVisible ->
+    val addressNumberVisibility: LiveData<Int> = Transformations.switchMap(roadNameVisibility) { roadVisible ->
         Transformations.switchMap(rubbishRepository.currentRoadName) { road ->
             Transformations.map(rubbishRepository.getAddressNumbersResult) { addresses ->
                 if (roadVisible == View.VISIBLE && !road.isNullOrEmpty() && addresses is Resource.Success) {
@@ -118,13 +46,7 @@ object MainData {
         }
     }
 
-    @RubbishInfoVisibility
-    @ViewModelScoped
-    @Provides
-    fun provideRubbishInfoVisibility(
-        @AddressNumberVisibility addressNumberVisibility: LiveData<Int>,
-        rubbishRepository: RubbishRepository
-    ): LiveData<Int> = Transformations.switchMap(addressNumberVisibility) { addressVisible ->
+    val rubbishInfoVisibility: LiveData<Int> = Transformations.switchMap(addressNumberVisibility) { addressVisible ->
         Transformations.switchMap(rubbishRepository.getRubbishInfoResult) { rubbish ->
             Transformations.map(rubbishRepository.currentAddressNumber) { address ->
                 if (addressVisible == View.VISIBLE && rubbish is Resource.Success && !address.isNullOrEmpty()) {
@@ -136,12 +58,7 @@ object MainData {
         }
     }
 
-    @RubbishVisibility
-    @ViewModelScoped
-    @Provides
-    fun provideRubbishVisibility(
-        rubbishRepository: RubbishRepository
-    ): LiveData<Int> = Transformations.switchMap(rubbishRepository.currentTownCity) { city ->
+    val rubbishVisibility: LiveData<Int> = Transformations.switchMap(rubbishRepository.currentTownCity) { city ->
         Transformations.switchMap(rubbishRepository.currentSuburbLocality) { locality ->
             Transformations.switchMap(rubbishRepository.currentRoadName) { road ->
                 Transformations.map(rubbishRepository.currentAddressNumber) { address ->
@@ -155,12 +72,7 @@ object MainData {
         }
     }
 
-    @LoadingVisibility
-    @ViewModelScoped
-    @Provides
-    fun provideLoadingVisibility(
-        rubbishRepository: RubbishRepository
-    ): LiveData<Int> = Transformations.switchMap(rubbishRepository.getTownCitiesResult) { cities ->
+    val loadingVisibility: LiveData<Int> = Transformations.switchMap(rubbishRepository.getTownCitiesResult) { cities ->
         Transformations.switchMap(rubbishRepository.getSuburbLocalitiesResult) { localities ->
             Transformations.switchMap(rubbishRepository.getRoadNamesResult) { roads ->
                 Transformations.switchMap(rubbishRepository.getAddressNumbersResult) { addresses ->
@@ -176,18 +88,11 @@ object MainData {
         }
     }
 
-    @AlarmEnabled
-    @ViewModelScoped
-    @Provides
-    fun provideAlarmEnabled(
-        @AddressNumberVisibility addressNumberVisibility: LiveData<Int>,
-        rubbishRepository: RubbishRepository
-    ): LiveData<Boolean> = Transformations.switchMap(addressNumberVisibility) { addressVisible ->
+    val alarmEnabled: LiveData<Boolean> = Transformations.switchMap(addressNumberVisibility) { addressVisible ->
         Transformations.switchMap(rubbishRepository.getRubbishInfoResult) { rubbish ->
             Transformations.map(rubbishRepository.currentAddressNumber) { address ->
                 addressVisible == View.VISIBLE && rubbish is Resource.Success && !address.isNullOrEmpty()
             }
         }
     }
-
 }
