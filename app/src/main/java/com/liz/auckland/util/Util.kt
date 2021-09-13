@@ -23,8 +23,10 @@ import com.google.gson.reflect.TypeToken
 import com.liz.auckland.R
 import com.liz.auckland.resource.Resource
 import com.liz.auckland.ui.main.MainActivity
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 inline fun <reified T> SharedPreferences.saveItem(key: String, item: T?) {
     val json = Gson().toJson(item)
@@ -61,17 +63,16 @@ fun Date.formatTime() : String? {
     return dateTimeFormat.format(this)
 }
 
-fun Date.formatKey() : String? {
-    val dateTimeFormat = SimpleDateFormat("yyyyMMdd HHmmss", Locale.US)
-    dateTimeFormat.timeZone = TimeZone.getTimeZone("UTC")
-    return dateTimeFormat.format(this)
-}
-
-fun Date.formatRequestCode() = (this.time/1000).toInt()
-
 @BindingAdapter("app:onClick", "app:key")
 fun Button.onClick(check: (String?) -> Unit, key: String?) {
     setOnClickListener { check(key) }
+}
+
+fun<T: Any?> handleError(
+    data: MutableLiveData<Resource<T>>,
+    errorText: String) {
+    ToastUtils.showShort(errorText)
+    data.postValue(Resource.Error(errorText, data.value?.data))
 }
 
 fun<T: Any?> LifecycleOwner.handleError(result: MutableLiveData<Resource<T>>) {

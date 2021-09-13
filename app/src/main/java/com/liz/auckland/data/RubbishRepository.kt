@@ -8,6 +8,7 @@ import com.liz.auckland.app.MainApplication
 import com.liz.auckland.model.Rubbish
 import com.liz.auckland.resource.Resource
 import com.liz.auckland.util.KEY
+import com.liz.auckland.util.handleError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -80,11 +81,11 @@ class RubbishRepository @Inject constructor(
                         savedData.remove(KEY.CURRENT_TOWN_CITY)
                     }
                 } else {
-                    getTownCitiesResult.postValue(Resource.Error("No town city founds!", getTownCitiesResult.value?.data))
+                    handleError(getTownCitiesResult, "No town city founds!")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                getTownCitiesResult.postValue(Resource.Error("Getting town cities error: ${e.message}", getTownCitiesResult.value?.data))
+                handleError(getTownCitiesResult, "Getting town cities error: ${e.message}")
             }
         }
     }

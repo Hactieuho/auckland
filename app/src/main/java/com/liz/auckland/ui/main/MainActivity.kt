@@ -100,11 +100,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        handleError(rubbishRepository.getTownCitiesResult)
-        handleError(rubbishRepository.getSuburbLocalitiesResult)
-        handleError(rubbishRepository.getRoadNamesResult)
-        handleError(rubbishRepository.getAddressNumbersResult)
-
         viewModel.addAlarm.observe(this) {
             if (!it.isNullOrEmpty()) {
                 val date = when (it) {
