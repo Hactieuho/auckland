@@ -14,7 +14,7 @@ import java.util.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        print(12341 + 11234)
     }
 
     @Test
