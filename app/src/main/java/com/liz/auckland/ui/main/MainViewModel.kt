@@ -4,14 +4,8 @@ import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.liz.auckland.app.MainApplication
 import com.liz.auckland.data.RubbishRepository
 import com.liz.auckland.resource.Resource
-import com.liz.auckland.util.KEY
-import com.liz.auckland.util.formatKey
-import java.util.*
-import kotlin.collections.HashMap
-import com.google.gson.internal.LinkedTreeMap
 
 class MainViewModel : ViewModel() {
     // Town city hien tai
