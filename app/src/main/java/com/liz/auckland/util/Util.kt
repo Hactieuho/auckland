@@ -1,5 +1,6 @@
 package com.liz.auckland.util
 
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.provider.AlarmClock
@@ -80,7 +81,7 @@ fun <T: Any?> LifecycleOwner.handleError(result: MutableLiveData<Resource<T>>) {
     }
 }
 
-fun Fragment.showList(title: Int, result: MutableLiveData<Resource<List<String?>?>>, current: MutableLiveData<String?>) {
+fun Activity.showList(title: Int, result: MutableLiveData<Resource<List<String?>?>>, current: MutableLiveData<String?>) {
     val nameList = result.value?.data?.sortedBy { it }?.toTypedArray()
     val checkedName = current.value?.let {
         nameList?.indexOf(
@@ -88,7 +89,7 @@ fun Fragment.showList(title: Int, result: MutableLiveData<Resource<List<String?>
         )
     } ?: 0
 
-    MaterialAlertDialogBuilder(requireContext())
+    MaterialAlertDialogBuilder(this)
         .setTitle(resources.getString(title))
         .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which -> }
         .setSingleChoiceItems(nameList, checkedName) { dialog, which ->

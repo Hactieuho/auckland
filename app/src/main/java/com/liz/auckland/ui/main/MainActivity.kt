@@ -3,23 +3,20 @@ package com.liz.auckland.ui.main
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.google.android.material.tabs.TabLayoutMediator
 import com.liz.auckland.R
 import com.liz.auckland.app.MainApplication
 import com.liz.auckland.data.RubbishRepository
 import com.liz.auckland.databinding.ActivityMainBinding
-import com.liz.auckland.model.MainPagerAdapter
 import com.liz.auckland.resource.Resource
 import com.liz.auckland.util.KEY
 import com.liz.auckland.util.handleError
 import com.liz.auckland.util.onChooseTime
+import com.liz.auckland.util.showList
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     val viewModel: MainViewModel by viewModels()
-    private lateinit var adapter: MainPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,23 +26,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
+        // Lay danh sach town city khi chon
+        binding.tvTownCityList.setOnClickListener { showTownCities() }
+        binding.tvSuburbLocalities.setOnClickListener { showSuburbLocalities() }
+        binding.tvRoadName.setOnClickListener { showRoadNames() }
+        binding.tvAddressNumber.setOnClickListener { showAddressNumbers() }
         // Lay danh sach town city
         viewModel.getTownCities()
-        adapter = MainPagerAdapter(this)
-        binding.viewpager.adapter = adapter
-        TabLayoutMediator(binding.tabLayout, binding.viewpager) { tab, position ->
-            tab.text = when(position) {
-                1 -> getString(R.string.reminder)
-                2 -> getString(R.string.info)
-                else -> getString(R.string.home)
-            }
-            val icon = when(position) {
-                1 -> R.drawable.ic_alarm
-                2 -> R.drawable.ic_info
-                else -> R.drawable.ic_home
-            }
-            tab.icon = ContextCompat.getDrawable(this, icon)
-        }.attach()
     }
 
     private fun observeViewModel() {
@@ -117,5 +104,21 @@ class MainActivity : AppCompatActivity() {
                 viewModel.addAlarm.postValue(null)
             }
         }
+    }
+
+    private fun showTownCities() {
+        showList(R.string.choose_an_town_city, RubbishRepository.instant.getTownCitiesResult, viewModel.currentTownCity)
+    }
+
+    private fun showSuburbLocalities() {
+        showList(R.string.choose_a_suburb_locality, RubbishRepository.instant.getSuburbLocalitiesResult, viewModel.currentSuburbLocality)
+    }
+
+    private fun showRoadNames() {
+        showList(R.string.choose_a_road_name, RubbishRepository.instant.getRoadNamesResult, viewModel.currentRoadName)
+    }
+
+    private fun showAddressNumbers() {
+        showList(R.string.choose_an_address_number, RubbishRepository.instant.getAddressNumbersResult, viewModel.currentAddressNumber)
     }
 }

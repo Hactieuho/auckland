@@ -10,7 +10,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.*
 
-private const val BASE_URL = "http://sinno.soict.ai:11080/"
+private const val BASE_URL = "http://202.191.56.198:11080/"
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .add(Date::class.java, MoshiUTCDateAdapter())
