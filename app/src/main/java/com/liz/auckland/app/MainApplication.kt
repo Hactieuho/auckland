@@ -7,10 +7,8 @@ import android.content.Context
 import android.os.Build
 import com.liz.auckland.BuildConfig
 import com.liz.auckland.R
-import com.liz.auckland.model.Address
 import com.liz.auckland.util.KEY
 import com.liz.auckland.util.getItem
-import com.liz.auckland.util.getList
 import com.liz.auckland.util.saveItem
 import timber.log.Timber
 import java.lang.Exception
